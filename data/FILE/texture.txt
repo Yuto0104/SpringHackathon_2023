@@ -1,0 +1,7 @@
+// テクスチャの最大数
+MAX_TEXTURE = 1
+
+//***************************
+// TEXTUREファイル名の読み込み
+//***************************
+TEXTURE_FILENAME = data/TEXTURE/number000.png		# [0]
