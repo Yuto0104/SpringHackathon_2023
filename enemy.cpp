@@ -50,7 +50,8 @@ CEnemy * CEnemy::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 //=============================================================================
 CEnemy::CEnemy()
 {
-
+	// タイプの付与
+	SetObjType(OBJETYPE_ENEMY);
 }
 
 //=============================================================================
@@ -118,12 +119,15 @@ void CEnemy::Update()
 	m_move.x = (PlayerPos.x - pos.x) / (fRot / 1.0f);
 	m_move.y = (PlayerPos.y - pos.y) / (fRot / 1.0f);
 
+	//前回位置の保存
+	SetPosOld(pos);
+
 	// 位置の更新
 	pos += m_move;
 	SetPos(pos);
 
 	// 当たり判定
-	m_pCollisionRectangle3D->Collision(CObject::OBJETYPE_ENEMY, true);
+	m_pCollisionRectangle3D->Collision(CObject::OBJETYPE_PLAYER, true);
 }
 
 //=============================================================================
