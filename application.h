@@ -55,6 +55,7 @@ public:
 		MODE_GAME,				// ゲーム
 		MODE_RESULT,			// リザルト
 		MODE_TUTORIAL,			// チュートリアル
+		MODE_SELECTITEM,		// アイテムセレクト
 		MAX_MODE,				// シーンの最大数
 		MODE_NONE,				// シーン無し
 	};

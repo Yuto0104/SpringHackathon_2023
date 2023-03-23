@@ -37,6 +37,7 @@
 #include "pause.h"
 #include "tutorial.h"
 #include "joypad.h"
+#include "select_item.h"
 
 //*****************************************************************************
 // Ã“Iƒƒ“ƒo•Ï”éŒ¾
@@ -183,6 +184,10 @@ void CApplication::SetMode(SCENE_MODE mode)
 
 	case CApplication::MODE_TUTORIAL:
 		pSceneMode = new CTutorial;
+		break;
+
+	case CApplication::MODE_SELECTITEM:
+		pSceneMode = new CSelectItem;
 		break;
 
 	default:
