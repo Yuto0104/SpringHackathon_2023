@@ -81,7 +81,7 @@ HRESULT CGame::Init()
 
 	// サウンド情報の取得
 	CSound *pSound = CApplication::GetSound();
-	pSound->PlaySound(CSound::SOUND_LABEL_BGM000);
+	//pSound->PlaySound(CSound::SOUND_LABEL_BGM000);
 
 	// 重力の値を設定
 	CCalculation::SetGravity(0.2f);
@@ -127,7 +127,7 @@ HRESULT CGame::Init()
 	CMine::Create(D3DXVECTOR3(300.0f, 50.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f),2);
 
 	// エネミー
-	m_pEnemy = CEnemy::Create(D3DXVECTOR3(100.0f,0.0f,0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f),30);
+	m_pEnemy = CEnemy::Create(D3DXVECTOR3(100.0f,0.0f,0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f),2);
 
 	// マウスカーソルを消す
 	pMouse->SetShowCursor(false);

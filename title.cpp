@@ -54,7 +54,7 @@ HRESULT CTitle::Init()
 {
 	// ƒTƒEƒ“ƒhî•ñ‚ÌŽæ“¾
 	CSound *pSound = CApplication::GetSound();
-	pSound->PlaySound(CSound::SOUND_LABEL_BGM000);
+	//pSound->PlaySound(CSound::SOUND_LABEL_BGM000);
 
 	m_pTitleLogo = CObject2D::Create();
 	m_pTitleLogo->SetPos(D3DXVECTOR3(640.0f, 280.0f, 0.0f));

@@ -104,7 +104,7 @@ void CPlayer::Update(void)
 	if (m_nBulletCreateTime <= 0)
 	{
 		CMissile::Create(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		m_nBulletCreateTime = 100;
+		m_nBulletCreateTime = 350;
 	}
 
 	SetPos(m_pos);
