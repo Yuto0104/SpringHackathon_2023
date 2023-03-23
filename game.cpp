@@ -29,6 +29,7 @@
 #include "player.h"
 #include "mine.h"
 #include "pause.h"
+#include "calculation.h"
 
 //*****************************************************************************
 // 静的メンバ変数宣言
@@ -121,11 +122,6 @@ HRESULT CGame::Init()
 
 	// 地雷
 	CMine::Create(D3DXVECTOR3(100.0f, 50.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f),1);
-	CMine::Create(D3DXVECTOR3(200.0f, 50.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f),1);
-	CMine::Create(D3DXVECTOR3(300.0f, 50.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f),2);
-
-	// エネミー
-	m_pEnemy = CEnemy::Create(D3DXVECTOR3(100.0f,0.0f,0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f),3);
 
 	// マウスカーソルを消す
 	pMouse->SetShowCursor(false);
@@ -150,7 +146,9 @@ HRESULT CGame::Init()
 	// フォグの密度の設定
 	pDevice->SetRenderState(D3DRS_FOGDENSITY, *(DWORD*)(&fFogDensity));
 
+	//初期化
 	m_bGame = true;
+	m_nSpawnTime = 0;
 
 	return S_OK;
 }
@@ -218,9 +216,20 @@ void CGame::Update()
 	{
 		pPause->SetPause(true);
 		//CApplication::SetNextMode(CApplication::MODE_SELECTITEM);
+
 	}
 
-	if (!m_bGame || pKeyboard->GetTrigger(DIK_V))
+	if (m_nSpawnTime < 60)
+	{//スポーン時間が一定以下なら加算する
+		m_nSpawnTime++;
+	}
+	else if (m_nSpawnTime >= 60)
+	{//一定以上ならスポーンさせて0にする
+		EnemySpawn();
+		m_nSpawnTime = 0;
+	}
+
+	if (!m_bGame)
 	{
 		CApplication::SetNextMode(CApplication::MODE_RESULT);
 	}
@@ -234,4 +243,51 @@ void CGame::Update()
 void CGame::Draw()
 {
 
+}
+
+//=============================================================================
+// エネミーのスポーン
+// Author : 髙野馨將
+// 概要 : 敵を出現させる
+//=============================================================================
+void CGame::EnemySpawn()
+{
+	// スポーンする方向
+	int Spawn = 0;
+	if (m_pPlayer != nullptr)
+	{
+		// プレイヤーの位置を取得
+		D3DXVECTOR3 pos = m_pPlayer->GetPos();
+		D3DXVECTOR3 EnemyPos;
+		// ランダムで敵のスポーンする方向を決める
+		Spawn = CCalculation::Rand(4);
+		// ランダムで敵のxかyを変える
+		int rand = CCalculation::Rand(5,-2);
+
+		switch (Spawn)
+		{// エネミーのスポーン
+		case 0:
+			// 左
+			m_pEnemy = CEnemy::Create(D3DXVECTOR3(pos.x - (CRenderer::SCREEN_WIDTH / 2), pos.y + (125.0f * rand), 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f), 3);
+			break;
+
+		case 1:
+			// 右
+			m_pEnemy = CEnemy::Create(D3DXVECTOR3(pos.x + (CRenderer::SCREEN_WIDTH / 2), pos.y + (125.0f * rand), 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f), 3);
+			break;
+
+		case 2:
+			// 下
+			m_pEnemy = CEnemy::Create(D3DXVECTOR3(pos.x + (245.0f * rand), pos.y + (CRenderer::SCREEN_HEIGHT / 2), 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f), 3);
+			break;
+
+		case 3:
+			// 上
+			m_pEnemy = CEnemy::Create(D3DXVECTOR3(pos.x + (245.0f * rand), pos.y - (CRenderer::SCREEN_HEIGHT / 2), 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f), 3);
+			break;
+
+		default:
+			break;
+		}
+	}
 }

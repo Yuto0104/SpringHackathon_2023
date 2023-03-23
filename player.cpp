@@ -47,6 +47,7 @@ HRESULT CPlayer::Init(void)
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			//位置
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			//速度の初期化処理
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			//向き
+	m_nMineCT = 0;									//クールタイム
 
 	// 3D矩形の当たり判定の設定
 	m_pCollisionRectangle3D = CCollision_Rectangle3D::Create();

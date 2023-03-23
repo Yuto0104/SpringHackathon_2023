@@ -23,22 +23,6 @@ class CCollision_Rectangle3D;
 class CPlayer : public CObject3D
 {
 public:
-
-	enum Parts
-	{
-		BODY = 0,								//体
-		HEAD,									//頭
-		LEFT_ARM,								//左腕
-		LEFT_HAND,								//左手
-		RIGHT_ARM,								//右腕
-		RIGHT_HAND,								//右手
-		LEFT_LEG,								//左足
-		LEFT_FOOT,								//左太腿
-		RIGHT_LEG,								//右足
-		RIGHT_FOOT,								//右太腿
-		PARTS_MAX
-	};
-
 	CPlayer();															//コンストラクタ
 	~CPlayer() override;												//デストラクタ
 
@@ -58,6 +42,7 @@ private:
 	D3DXVECTOR3 m_move;													//速度
 	D3DXVECTOR3 m_rot;													//向き
 	D3DXMATRIX  m_mtxWorld;												//ワールドマトリックス
+	int m_nMineCT;														//地雷のクールタイム
 	int m_nLife;														//体力
 };
 
