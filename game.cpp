@@ -32,6 +32,7 @@
 #include "calculation.h"
 #include "select_item.h"
 #include "lille.h"
+#include "life.h"
 
 //*****************************************************************************
 // 静的メンバ変数宣言
@@ -79,9 +80,8 @@ HRESULT CGame::Init()
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CApplication::GetRenderer()->GetDevice();
 
-	// サウンド情報の取得
-	CSound *pSound = CApplication::GetSound();
-	//pSound->PlaySound(CSound::SOUND_LABEL_BGM000);
+	//SE
+	CApplication::GetSound()->Play(CSound::SOUND_LABEL_BGM_BGM001);
 
 	// 重力の値を設定
 	CCalculation::SetGravity(0.2f);
@@ -96,6 +96,9 @@ HRESULT CGame::Init()
 	m_pTime->SetTime(120);
 	m_pTime->SetTimeAdd(false);
 	m_pTime->SetPos(D3DXVECTOR3(640.0f, m_pTime->GetSize().y / 2.0f, 0.0f));
+
+	// HP
+	CLife::Create(4);
 
 	// プレイヤー生成
 	m_pPlayer = CPlayer::Create(D3DXVECTOR3(50.0f, 0.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f));
@@ -122,7 +125,7 @@ HRESULT CGame::Init()
 	//pMesh->SetUseCollison(bCollison);
 
 	// 地雷
-	CMine::Create(D3DXVECTOR3(100.0f, 50.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f),1);
+	CMine::Create(D3DXVECTOR3(100.0f, 50.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f),10);
 	CMine::Create(D3DXVECTOR3(200.0f, 50.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f),1);
 	CMine::Create(D3DXVECTOR3(300.0f, 50.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f),2);
 
@@ -155,6 +158,8 @@ HRESULT CGame::Init()
 	//初期化
 	m_bGame = true;
 	m_nSpawnTime = 0;
+	m_bSelectItem = true;
+	m_bSelectItem2 = true;
 
 	return S_OK;
 }
@@ -175,7 +180,7 @@ void CGame::Uninit()
 	CSound *pSound = CApplication::GetSound();
 
 	// サウンド終了
-	pSound->StopSound();
+	pSound->Stop();
 
 	CCamera *pCamera = CApplication::GetCamera();
 	pCamera->SetFollowTarget(false);
@@ -219,16 +224,31 @@ void CGame::Update()
 		pPause->SetPause(false, false);
 	}
 
-	if (!pSelect->GetPause()
-		&& pKeyboard->GetTrigger(DIK_H))
+	if (m_pTime->GetTime() == 100)
 	{
-		pSelect->SetPause(true, true);
-
+		if (m_bSelectItem)
+		{
+			pSelect->SetPause(true, true);
+			m_bSelectItem = false;
+		}
 	}
-	else if (pSelect->GetPause()
-		&& pKeyboard->GetTrigger(DIK_H))
+
+	if (m_pTime->GetTime() == 80)
 	{
-		pSelect->SetPause(false, false);
+		if (m_bSelectItem2)
+		{
+			pSelect->SetPause(true, true);
+			m_bSelectItem2 = false;
+		}
+	}
+
+	if (m_pTime->GetTime() == 50)
+	{
+		if (m_bSelectItem3)
+		{
+			pSelect->SetPause(true, true);
+			m_bSelectItem3 = false;
+		}
 	}
 
 	if (m_nSpawnTime < 60
@@ -240,6 +260,23 @@ void CGame::Update()
 	{//一定以上ならスポーンさせて0にする
 		EnemySpawn();
 		m_nSpawnTime = 0;
+	}
+
+	// ライフ0以下だと
+	if (m_pPlayer != nullptr)
+	{
+		if (m_pPlayer->GetLife() <= 0)
+		{// リザルトへ
+			CApplication::SetNextMode(CApplication::MODE_RESULT);
+			// 終了処理
+			m_pPlayer->Uninit();
+			//プレイヤーのポインタを初期化
+			m_pPlayer = nullptr;
+			CCamera *pCamera = CApplication::GetCamera();
+			pCamera->SetFollowTarget(false);
+
+			return;
+		}
 	}
 
 	if (m_pTime->GetTimeEnd()

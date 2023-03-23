@@ -51,6 +51,7 @@ private:
 
 	bool m_bTex;				
 	bool m_SkillFlag;														//スキルのフラグ
+	int m_nInvincibleCnt;												//無敵時間
 };
 
 #endif

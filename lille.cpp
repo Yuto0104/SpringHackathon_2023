@@ -22,6 +22,10 @@
 #include "application.h"
 #include "calculation.h"
 #include "number.h"
+#include "forcefield.h"
+#include "game.h"
+#include "player.h"
+#include "mine.h"
 
 //=============================================================================
 // インスタンス生成
@@ -58,6 +62,7 @@ CLille::CLille(int nPriority) : CObject2D(nPriority)
 	m_nNumber = 0;				// 目標の番号
 	m_nCntFrame = 0;			// フレームカウント
 	bool m_bScroll = true;		// スクロール
+	m_SkillFlag = false;
 }
 
 //=============================================================================
@@ -126,6 +131,7 @@ void CLille::Update()
 	// オブジェクト2Dの更新
 	CObject2D::Update();
 
+
 	if (m_bScroll)
 	{
 		Scroll();
@@ -134,7 +140,17 @@ void CLille::Update()
 	{
 		if (m_nNumber == m_nNumDest)
 		{// 当たり
-		
+			CPlayer * pPlayer = nullptr;
+			pPlayer = CGame::GetPlayer();
+
+			CForceField::Create(pPlayer->GetPos(), D3DXVECTOR3(60.0f, 60.0f, 0.0f));
+		}
+		else
+		{
+			CPlayer * pPlayer = nullptr;
+			pPlayer = CGame::GetPlayer();
+
+			CMine::Create(pPlayer->GetPos(), D3DXVECTOR3(20.0f, 20.0f, 0.0f), 10);
 		}
 	}
 }

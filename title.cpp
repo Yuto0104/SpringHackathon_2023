@@ -52,9 +52,8 @@ CTitle::~CTitle()
 //=============================================================================
 HRESULT CTitle::Init()
 {
-	// サウンド情報の取得
-	CSound *pSound = CApplication::GetSound();
-	//pSound->PlaySound(CSound::SOUND_LABEL_BGM000);
+	//SE
+	CApplication::GetSound()->Play(CSound::SOUND_LABEL_BGM_BGM000);
 
 	CBG *pBG = CBG::Create();
 	pBG->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
@@ -92,7 +91,7 @@ void CTitle::Uninit()
 	CSound *pSound = CApplication::GetSound();
 
 	// サウンド終了
-	pSound->StopSound();
+	pSound->Stop();
 
 	// スコアの解放
 	Release();
@@ -121,7 +120,8 @@ void CTitle::Update()
 	if (m_bPressEnter
 		&& pKeyboard->GetTrigger(DIK_RETURN))
 	{
-		//pSound->PlaySound(CSound::SOUND_LABEL_SE_DECIDE);
+		//SE
+		CApplication::GetSound()->Play(CSound::SOUND_LABEL_SE_ENTER);
 		m_bPressEnter = false;
 	}
 

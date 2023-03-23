@@ -208,6 +208,8 @@ void CBullet::HitEnemy(D3DXVECTOR3 pos, int life)
 			&&pos.z + 0.5f >= EnemyPos.z - EnemySize.z
 			&&pos.z - 0.5f <= EnemyPos.z + EnemySize.z)
 		{
+			//SE
+			CApplication::GetSound()->Play(CSound::SOUND_LABEL_SE_HIT);
 			//’e‚Ìíœ
 			m_nLife = 0;
 			SetLife(m_nLife);

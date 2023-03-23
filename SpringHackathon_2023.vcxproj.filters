@@ -55,6 +55,7 @@
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="forcefield.cpp" />
     <ClCompile Include="missile.cpp" />
+    <ClCompile Include="life.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.h" />
@@ -111,5 +112,6 @@
     <ClInclude Include="bullet.h" />
     <ClInclude Include="forcefield.h" />
     <ClInclude Include="missile.h" />
+    <ClInclude Include="life.h" />
   </ItemGroup>
 </Project>

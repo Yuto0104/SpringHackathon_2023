@@ -19,6 +19,7 @@
 #include "enemy.h"
 #include "application.h"
 #include "bullet.h"
+#include "sound.h"
 
 //=============================================================================
 // インスタンス生成
@@ -101,37 +102,47 @@ void CMissile::Uninit()
 //=============================================================================
 void CMissile::Update()
 {// 更新処理
+	CPlayer *pPlayer = CGame::GetPlayer();
+
+	if (pPlayer != nullptr)
+	{
+		D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
+		if (CGame::GetEnemy() != nullptr)
+		{
+			D3DXVECTOR3 EnemyPos = CGame::GetEnemy()->GetPos();
 	D3DXVECTOR3 PlayerPos = CGame::GetPlayer()->GetPos();
 	if (CGame::GetEnemy() != nullptr)
 	{
 		D3DXVECTOR3 EnemyPos = CGame::GetEnemy()->GetPos();
 
-		m_BulletMove = PlayerPos - EnemyPos;
-		D3DXVec3Normalize(&m_BulletMove, &m_BulletMove);
-		m_BulletMove *= 15.0f;
+			m_BulletMove = PlayerPos - EnemyPos;
+			D3DXVec3Normalize(&m_BulletMove, &m_BulletMove);
+			m_BulletMove *= 15.0f;
 
-		m_nNormalTime--;
-		m_MissileTime--;
+			m_nNormalTime--;
+			m_MissileTime--;
 
-		if (m_nNormalTime <= 0)
-		{
-			m_pBullet = CBullet::Create(PlayerPos, -m_BulletMove, D3DXVECTOR3(5.0f, 5.0f, 0.0f), 100, CBullet::BulletType_Normal);
-		}
-		if (m_nNormalTime <= 0)
-		{
-			m_nNormalTime = 40;
-		}
+			if (m_nNormalTime <= 0)
+			{
+				m_pBullet = CBullet::Create(PlayerPos, -m_BulletMove, D3DXVECTOR3(5.0f, 5.0f, 0.0f), 100, CBullet::BulletType_Normal);
+				//SE
+				CApplication::GetSound()->Play(CSound::SOUND_LABEL_SE_ATTACK);
+			}
+			if (m_nNormalTime <= 0)
+			{
+				m_nNormalTime = 40;
+			}
 
-		if (m_MissileTime <= 0)
-		{
-			m_pBullet = CBullet::Create(PlayerPos, -m_BulletMove, D3DXVECTOR3(25.0f, 25.0f, 0.0f), 100, CBullet::BulletType_Missile);
-		}
-		if (m_MissileTime <= 0)
-		{
-			m_MissileTime = 250;
+			if (m_MissileTime <= 0)
+			{
+				m_pBullet = CBullet::Create(PlayerPos, -m_BulletMove, D3DXVECTOR3(25.0f, 25.0f, 0.0f), 100, CBullet::BulletType_Missile);
+			}
+			if (m_MissileTime <= 0)
+			{
+				m_MissileTime = 250;
+			}
 		}
 	}
-
 }
 
 //=============================================================================

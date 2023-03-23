@@ -1,7 +1,7 @@
 //=============================================================================
 //
 // player.cpp
-// Author : 梶田大夢
+// Author : 梶田大夢 髙野馨將
 //
 //=============================================================================
 
@@ -15,10 +15,12 @@
 #include "keyboard.h"
 #include "collision_rectangle3D.h"
 #include "debug_proc.h"
+#include "game.h"
 #include "enemy.h"
 #include "forcefield.h"
 #include "missile.h"
 #include "bullet3D.h"
+#include "sound.h"
 
 //=============================================================================
 //							静的変数の初期化
@@ -50,10 +52,10 @@ HRESULT CPlayer::Init(void)
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			//位置
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			//速度の初期化処理
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			//向き
-	m_SkillFlag = false;
 	m_nLife = 10;
 	m_nBulletCreateTime = 0;
 	m_nMineCT = 0;									//クールタイム
+	m_nInvincibleCnt = 0;							//無敵時間
 	m_bTex = false;
 
 	// 3D矩形の当たり判定の設定
@@ -99,12 +101,6 @@ void CPlayer::Update(void)
 
 	m_pos += m_move;
 
-	if (m_SkillFlag == false)
-	{
-		CForceField::Create(m_pos, D3DXVECTOR3(60.0f, 60.0f, 0.0f));
-		m_SkillFlag = true;
-	}
-
 	m_nBulletCreateTime--;
 	if (m_nBulletCreateTime <= 0)
 	{
@@ -120,6 +116,14 @@ void CPlayer::Update(void)
 	m_move.y += (0.0f - m_move.y) * 0.1f;
 	m_move.z += (0.0f - m_move.z) * 0.1f;
 
+	//無敵時間
+	if (m_nInvincibleCnt > 0)
+	{
+		m_nInvincibleCnt--;			//無敵時間の減算
+	}
+
+	//当たり判定(無敵時間が0以下なら)
+	if (m_pCollisionRectangle3D->Collision(CObject::OBJETYPE_ENEMY, true) && m_nInvincibleCnt <= 0)
 	if (m_bTex)
 	{
 		// テクスチャ座標の設定
@@ -134,6 +138,14 @@ void CPlayer::Update(void)
 	//当たり判定
 	if (m_pCollisionRectangle3D->Collision(CObject::OBJETYPE_ENEMY, true))
 	{
+		// 体力の減少
+		m_nLife--;
+		// サウンド情報の取得
+		//SE
+		CApplication::GetSound()->Play(CSound::SOUND_LABEL_SE_HIT);
+		// 無敵時間の設定
+		m_nInvincibleCnt = 60;
+
 		CEnemy *pEnemy = (CEnemy*)m_pCollisionRectangle3D->GetCollidedObj();
 
 		D3DXVECTOR3 move = pEnemy->GetPos() - pEnemy->GetPosOld();
@@ -159,7 +171,11 @@ void CPlayer::Update(void)
 
 void CPlayer::Draw(void)
 {
-	CObject3D::Draw();
+	//点滅させる
+	if (m_nInvincibleCnt % 10 <= 5)
+	{
+		CObject3D::Draw();
+	}
 }
 
 //生成処理
@@ -170,7 +186,7 @@ CPlayer* CPlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size)
 	pPlayer->Init();
 	pPlayer->SetPos(pos);
 	pPlayer->SetSize(size);
-	
+
 	//生成したインスタンスを返す
 	return pPlayer;
 }
