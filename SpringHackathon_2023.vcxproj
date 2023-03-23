@@ -160,6 +160,7 @@
     <ClCompile Include="collision_rectangle3D.cpp" />
     <ClCompile Include="collision_sphere.cpp" />
     <ClCompile Include="debug_proc.cpp" />
+    <ClCompile Include="enemy.cpp" />
     <ClCompile Include="fade.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="input.cpp" />
@@ -206,6 +207,7 @@
     <ClInclude Include="collision_rectangle3D.h" />
     <ClInclude Include="collision_sphere.h" />
     <ClInclude Include="debug_proc.h" />
+    <ClInclude Include="enemy.h" />
     <ClInclude Include="fade.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="input.h" />
