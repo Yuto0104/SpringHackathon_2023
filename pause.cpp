@@ -48,7 +48,7 @@ CPause *CPause::Create()
 //=============================================================================
 CPause::CPause(int nPriority /*= CObject::PRIORITY_LEVEL3*/) : CObject(nPriority)
 {
-	m_nextMode = MODE_RETURN;								// 次のモード
+	m_nextMode = MODE_RETURN;							// 次のモード
 	m_pPauseBGObj = nullptr;							// ポーズ背景オブジェクト
 	m_pReturnObj = nullptr;								// リターンオブジェクト
 	m_pNewGameObj = nullptr;							// ニューゲームオブジェクト
@@ -61,6 +61,7 @@ CPause::CPause(int nPriority /*= CObject::PRIORITY_LEVEL3*/) : CObject(nPriority
 	m_nCntFrame = 0;									// フレームカウント
 	m_bPressEnter = true;								// エンターキーを押せるかさ
 	m_bPause = false;									// ポーズしているか
+	m_bSelect = false;									// 選択の使用状況
 }
 
 //=============================================================================
@@ -109,70 +110,12 @@ void CPause::Uninit()
 //=============================================================================
 void CPause::Update()
 {
-	// サウンド情報の取得
-	CSound *pSound = CApplication::GetSound();
-
-	// 入力情報の取得
-	CKeyboard *pKeyboard = CApplication::GetKeyboard();
-
 	if (CApplication::GetMode() == CApplication::MODE_GAME
 		&& !CApplication::GetFade()->GetFadeSituation())
 	{
-		if (m_bPause)
-		{
-			if (m_bPressEnter)
-			{
-				SelectMode();
-			}
-
-			FlashObj();
-
-			if (m_bPressEnter
-				&& pKeyboard->GetTrigger(DIK_RETURN))
-			{
-				//pSound->PlaySound(CSound::SOUND_LABEL_SE_DECIDE);
-				m_bPressEnter = false;
-			}
-
-			if (!m_bPressEnter
-				&& m_nCntFrame >= 40)
-			{
-				m_bPressEnter = true;
-				m_nCntFrame = 0;
-
-				switch (m_nextMode)
-				{
-				case MODE_RETURN:
-					SetPause(false);
-					break;
-
-				case MODE_GAME:
-					SetPause(false);
-					CApplication::SetNextMode(CApplication::MODE_GAME);
-					break;
-
-				case MODE_TITLE:
-					SetPause(false);
-					CApplication::SetNextMode(CApplication::MODE_TITLE);
-					break;
-
-				default:
-					assert(false);
-					break;
-				}
-			}
-
-			if (pKeyboard->GetTrigger(DIK_P))
-			{
-				SetPause(false);
-			}
-
-		}
-		else if (!m_bPause
-			&& pKeyboard->GetTrigger(DIK_P))
-		{
-			SetPause(true);
-			//pSound->PlaySound(CSound::SOUND_LABEL_SE_PAUSE);
+		if (m_bSelect)
+		{// 選択画面
+			Select();
 		}
 	}
 }
@@ -235,6 +178,7 @@ void CPause::SetColor(const D3DXCOLOR & col)
 void CPause::SetPause(const bool bPause)
 {
 	m_bPause = bPause;
+	m_bSelect = true;
 
 	if (m_bPause)
 	{
@@ -284,8 +228,17 @@ void CPause::SetPause(const bool bPause)
 		// タイトルオブジェクト
 		m_pTitleObj->Uninit();
 	}
+}
 
-	CSuper::SetPause(m_bPause);
+//=============================================================================
+// ポーズのセッター
+// Author : 唐﨑結斗
+// 概要 : ポーズの設定を行う
+//=============================================================================
+void CPause::SetPause()
+{
+	m_bPause = true;
+	m_bSelect = false;
 }
 
 //=============================================================================
@@ -372,5 +325,76 @@ void CPause::SelectMode()
 	}
 
 	m_nextMode = (NEXT_MODE)nMode;
+}
+
+//=============================================================================
+// 選択画面
+// Author : 唐﨑結斗
+// 概要 : 選択画面
+//=============================================================================
+void CPause::Select()
+{
+	// サウンド情報の取得
+	CSound *pSound = CApplication::GetSound();
+
+	// 入力情報の取得
+	CKeyboard *pKeyboard = CApplication::GetKeyboard();
+
+	if (m_bPause)
+	{
+		if (m_bPressEnter)
+		{
+			SelectMode();
+		}
+
+		FlashObj();
+
+		if (m_bPressEnter
+			&& pKeyboard->GetTrigger(DIK_RETURN))
+		{
+			//pSound->PlaySound(CSound::SOUND_LABEL_SE_DECIDE);
+			m_bPressEnter = false;
+		}
+
+		if (!m_bPressEnter
+			&& m_nCntFrame >= 40)
+		{
+			m_bPressEnter = true;
+			m_nCntFrame = 0;
+
+			switch (m_nextMode)
+			{
+			case MODE_RETURN:
+				SetPause(false);
+				break;
+
+			case MODE_GAME:
+				SetPause(false);
+				CApplication::SetNextMode(CApplication::MODE_GAME);
+				break;
+
+			case MODE_TITLE:
+				SetPause(false);
+				CApplication::SetNextMode(CApplication::MODE_TITLE);
+				break;
+
+			default:
+				assert(false);
+				break;
+			}
+		}
+
+		if (pKeyboard->GetTrigger(DIK_P))
+		{
+			SetPause(false);
+		}
+
+	}
+	else if (!m_bPause
+		&& pKeyboard->GetTrigger(DIK_P))
+	{
+		SetPause(true);
+		//pSound->PlaySound(CSound::SOUND_LABEL_SE_PAUSE);
+	}
 }
 

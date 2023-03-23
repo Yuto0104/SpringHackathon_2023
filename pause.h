@@ -64,6 +64,7 @@ public:
 	void SetSize(const D3DXVECTOR3 &size) override;									// 大きさのセッター
 	void SetColor(const D3DXCOLOR &col);											// 色の設定
 	void SetPause(const bool bPause);												// ポーズの使用状況
+	void SetPause();																// ポーズの使用状況
 	D3DXVECTOR3 GetPos() override { return m_pos; }									// 位置のゲッター
 	D3DXVECTOR3 GetPosOld()  override { return m_posOld; }							// 過去位置のゲッター
 	D3DXVECTOR3 GetRot()  override { return m_rot; }								// 向きのゲッター
@@ -76,6 +77,7 @@ private:
 	//--------------------------------------------------------------------
 	void FlashObj();
 	void SelectMode();
+	void Select();
 
 	//--------------------------------------------------------------------
 	// メンバ変数
@@ -93,6 +95,7 @@ private:
 	int				m_nCntFrame;		// フレームカウント
 	bool			m_bPressEnter;		// エンターキーを押せるか
 	bool			m_bPause;			// ポーズしているか
+	bool			m_bSelect;			// 選択の使用状況
 };
 
 #endif

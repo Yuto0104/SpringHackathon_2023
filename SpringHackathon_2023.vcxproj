@@ -167,6 +167,7 @@
     <ClCompile Include="joypad.cpp" />
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="light.cpp" />
+    <ClCompile Include="lille.cpp" />
     <ClCompile Include="line.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="manager.cpp" />
@@ -216,6 +217,7 @@
     <ClInclude Include="joypad.h" />
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="light.h" />
+    <ClInclude Include="lille.h" />
     <ClInclude Include="line.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="manager.h" />
