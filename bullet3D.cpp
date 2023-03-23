@@ -14,12 +14,7 @@
 #include "bullet3D.h"
 #include "renderer.h"
 #include "application.h"
-
-#include "motion_player3D.h"
-#include "enemy3D.h"
-#include "motion_boss.h"
 #include "score.h"
-#include "effect3D.h"
 
 //=============================================================================
 // インスタンス生成
@@ -113,7 +108,6 @@ void CBullet3D::Update()
 	// 位置の取得
 	D3DXVECTOR3 pos = GetPos();
 	D3DXVECTOR3 size = GetSize();
-	COLOR_TYPE MyColorType = GetColorType();
 
 	// 移動量の算出
 	m_move.z = sinf(m_moveVec.x) * cosf(m_moveVec.y) * m_fSpeed;
@@ -123,29 +117,10 @@ void CBullet3D::Update()
 	// 位置の更新
 	pos += m_move;
 
-	// エフェクトの生成
-	CEffect3D *pEffect3D = CEffect3D::Create();
-	pEffect3D->SetPos(pos);
-	pEffect3D->SetSize(D3DXVECTOR3(size.x * 1.5f, size.y * 1.5f, 0.0f));
-
-	if (MyColorType == CObject::TYPE_WHITE)
-	{// エフェクトの色の設定
-		pEffect3D->SetRenderMode(CEffect3D::MODE_ADD);
-		pEffect3D->SetColor(D3DXCOLOR(0.5f, 0.7f, 1.0f, 1.0f));
-	}
-	else if (MyColorType == CObject::TYPE_BLACK)
-	{// エフェクトの色の設定
-		pEffect3D->SetRenderMode(CEffect3D::MODE_ADD);
-		pEffect3D->SetColor(D3DXCOLOR(1.0f, 0.1f, 0.1f, 1.0f));
-	}
-
-	pEffect3D->SetLife(10);
-
 	// 位置の更新
 	SetPos(pos);
 
-	if (CollisionScreen()
-		|| Collision())
+	if (CollisionScreen())
 	{
 		Uninit();
 	}
@@ -164,84 +139,6 @@ void CBullet3D::Draw()
 {
 	// 描画
 	CObject3D::Draw();
-}
-
-//=============================================================================
-// 衝突判定
-// Author : 唐﨑結斗
-// 概要 : 衝突判定
-//=============================================================================
-bool CBullet3D::Collision()
-{
-	bool bCollision = false;
-
-	for (int nCntPriority = 0; nCntPriority < CObject::MAX_LEVEL; nCntPriority++)
-	{
-		for (int nCntObj = 0; nCntObj < MAX_OBJECT; nCntObj++)
-		{
-			// オブジェクトインスタンスの取得
-			CObject *pObject = CObject::MyGetObject(nCntPriority, nCntObj);
-
-			if (pObject != nullptr)
-			{
-				if ((pObject->GetObjType() == CObject::OBJTYPE_3DENEMY
-					|| pObject->GetObjType() == CObject::OBJTYPE_3DPLAYER
-					|| pObject->GetObjType() == CObject::OBJTYPE_3DBOSS)
-					&& pObject->GetObjType() != CObject::OBJTYPE_3DBULLET)
-				{// タイプが一致した場合
-					if (pObject->GetObjType() == CObject::OBJTYPE_3DENEMY
-						&& m_parent != CObject::OBJTYPE_3DENEMY
-						&& ColisonSphere3D(pObject, D3DXVECTOR3(GetSize().x, GetSize().y, GetSize().x), pObject->GetColisonSize(), true))
-					{
-						// 敵オブジェクトにキャスト
-						CEnemy3D *pEnemy3D = dynamic_cast<CEnemy3D*>(pObject);
-
-						// 敵への攻撃処理
-						pEnemy3D->Hit(GetColorType(), m_nAttack);
-
-						bCollision = true;
-						break;
-					}
-
-					if (pObject->GetObjType() == CObject::OBJTYPE_3DBOSS
-						&& m_parent != CObject::OBJTYPE_3DBOSS
-						&& ColisonSphere3D(pObject, D3DXVECTOR3(GetSize().x, GetSize().y, GetSize().x), pObject->GetColisonSize(), true))
-					{
-						// ボスオブジェクトにキャスト
-						CMotionBoss *pMotionBoss = dynamic_cast<CMotionBoss*>(pObject);
-
-						// 敵への攻撃処理
-						pMotionBoss->Hit(GetColorType(), m_nAttack);
-
-						bCollision = true;
-						break;
-					}
-
-					if (pObject->GetObjType() == CObject::OBJTYPE_3DPLAYER
-						&& m_parent != CObject::OBJTYPE_3DPLAYER
-						&& ColisonSphere3D(pObject, D3DXVECTOR3(GetSize().x, GetSize().y, GetSize().x), pObject->GetColisonSize(), true))
-					{
-						// プレイヤーオブジェクトにキャスト
-						CMotionPlayer3D *pPlayer = (CMotionPlayer3D*)pObject;
-
-						if (pPlayer->GetColorType() != GetColorType())
-						{// プレイヤーへの攻撃処理
-							pPlayer->Hit();
-						}
-						else
-						{// プレイヤーのエネルギー吸収
-							pPlayer->Charge(1);
-						}
-
-						bCollision = true;
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	return bCollision;
 }
 
 //=============================================================================
