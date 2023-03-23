@@ -35,6 +35,7 @@ class CLight;
 class CSound;
 class CPause;
 class CJoypad;
+class CSelectItem;
 
 //=============================================================================
 // アプリケーションクラス
@@ -55,7 +56,6 @@ public:
 		MODE_GAME,				// ゲーム
 		MODE_RESULT,			// リザルト
 		MODE_TUTORIAL,			// チュートリアル
-		MODE_SELECTITEM,		// アイテムセレクト
 		MAX_MODE,				// シーンの最大数
 		MODE_NONE,				// シーン無し
 	};
@@ -73,6 +73,7 @@ public:
 	static CLight *GetLight() { return m_pLight; }										// ライトの取得
 	static CSound *GetSound() { return m_pSound; }										// サウンドのゲッター
 	static CPause *GetPause() { return m_pPause; }										// ポーズの取得
+	static CSelectItem *GetSelectItem() { return m_pSelectItem; }						// セレクトアイテムの取得
 	static CSceneMode *GetSceneMode() { return pSceneMode; }							// シーンモードの取得
 	static CJoypad *GetJoy() { return m_pJoy; }											// ジョイパッドのゲッター
 	static D3DXVECTOR3 ScreenCastWorld(const D3DXVECTOR3 &pos);							// ワールド座標をスクリーン座標にキャストする
@@ -115,6 +116,7 @@ private:
 	static CLight *m_pLight;					// ライトクラス
 	static CSound *m_pSound;					// サウンドクラス
 	static CPause *m_pPause;					// ポーズクラス
+	static CSelectItem *m_pSelectItem;			// セレクトアイテム
 	static CJoypad *m_pJoy;						// ジョイパッドクラス
 	static int m_nPriority;						// プライオリティ番号
 	static int m_nScore;						// 現在のスコア

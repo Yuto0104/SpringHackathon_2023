@@ -111,6 +111,11 @@ void CSuper::UpdateAll(void)
 						{
 							pSuper->Update();
 						}
+						else if (m_bPause
+							&& pObject->GetObjType() == CObject::OBJTYPE_SELECT_ITEM)
+						{
+							pSuper->Update();
+						}
 					}
 				}
 				

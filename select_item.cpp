@@ -11,40 +11,62 @@
 #include <assert.h>
 
 #include "select_item.h"
-#include "calculation.h"
-#include "keyboard.h"
-#include "mouse.h"
-#include "application.h"
-#include "renderer.h"
-#include "object.h"
-#include "bg.h"
-#include "score.h"
-#include "time.h"
-#include "sound.h"
 #include "object2D.h"
+#include "renderer.h"
+#include "application.h"
+#include "keyboard.h"
+#include "sound.h"
 #include "fade.h"
-#include "debug_proc.h"
 
-//*****************************************************************************
-// 静的メンバ変数宣言
-//*****************************************************************************
-D3DXCOLOR CSelectItem::fogColor;							// フォグカラー
-float CSelectItem::fFogStartPos;							// フォグの開始点
-float CSelectItem::fFogEndPos;								// フォグの終了点
-float CSelectItem::fFogDensity;								// フォグの密度
+//=============================================================================
+// インスタンス生成
+// Author : 唐﨑結斗
+// 概要 : スコアを生成する
+//=============================================================================
+CSelectItem *CSelectItem::Create()
+{
+	// オブジェクトインスタンス
+	CSelectItem *pPause = nullptr;
+
+	pPause = new CSelectItem;
+
+	// メモリの確保ができなかった
+	assert(pPause != nullptr);
+
+	// 数値の初期化
+	pPause->Init();
+
+	// インスタンスを返す
+	return pPause;
+}
 
 //=============================================================================
 // コンストラクタ
-// Author : 梶田大夢
+// Author : 唐﨑結斗
+// 概要 : インスタンス生成時に行う処理
 //=============================================================================
-CSelectItem::CSelectItem() : m_pSelectItem(nullptr)
+CSelectItem::CSelectItem(int nPriority /*= CObject::PRIORITY_LEVEL3*/) : CObject(nPriority)
 {
-
+	m_nextMode = MODE_SLOT;								// 次のモード
+	m_pSelectBGObj = nullptr;							// セレクト背景オブジェクト
+	m_pSlotObj = nullptr;								// スロットオブジェクト
+	m_pItemObj = nullptr;								// アイテムオブジェクト
+	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);				// 位置
+	m_posOld = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			// 過去の位置
+	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);				// 向き
+	m_size = D3DXVECTOR3(0.0f, 0.0f, 0.0f);				// 大き
+	
+	m_fAddAlpha = 0.0f;									// フレーム数のカウント
+	m_nCntFrame = 0;									// フレームカウント
+	m_bPressEnter = true;								// エンターキーを押せるか
+	m_bPause = false;									// ポーズしているか
+	m_bSelect = false;									// 選択の使用状況
 }
 
 //=============================================================================
 // デストラクタ
-// Author : 梶田大夢
+// Author : 唐﨑結斗
+// 概要 : インスタンス終了時に行う処理
 //=============================================================================
 CSelectItem::~CSelectItem()
 {
@@ -53,165 +75,297 @@ CSelectItem::~CSelectItem()
 
 //=============================================================================
 // 初期化
-// Author : 梶田大夢
+// Author : 唐﨑結斗
+// 概要 : 頂点バッファを生成し、メンバ変数の初期値を設定
 //=============================================================================
 HRESULT CSelectItem::Init()
-{// マウスの取得
-	CMouse *pMouse = CApplication::GetMouse();
+{
+	m_pos = D3DXVECTOR3(640.0f, 360.0f, 0.0f);
+	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_size = D3DXVECTOR3(400.0f, 400.0f, 0.0f);
+	SetObjType(CObject::OBJTYPE_SELECT_ITEM);
 
-	// デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CApplication::GetRenderer()->GetDevice();
-
-	// サウンド情報の取得
-	CSound *pSound = CApplication::GetSound();
-	pSound->PlaySound(CSound::SOUND_LABEL_BGM003);
-
-	// 重力の値を設定
-	CCalculation::SetGravity(0.2f);
-
-	// マウスカーソルを消す
-	pMouse->SetShowCursor(false);
-
-	// フォグの数値設定
-	fogColor = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);		// フォグカラー
-	fFogStartPos = 1.0f;								// フォグの開始点
-	fFogEndPos = 100000.0f;								// フォグの終了点
-	fFogDensity = 0.00001f;								// フォグの密度
-
-	// フォグの有効設定
-	pDevice->SetRenderState(D3DRS_FOGENABLE, TRUE);
-
-	// フォグカラーの設定
-	pDevice->SetRenderState(D3DRS_FOGCOLOR, fogColor);
-
-	// フォグの範囲設定
-	pDevice->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_LINEAR);
-	pDevice->SetRenderState(D3DRS_FOGSTART, *(DWORD*)(&fFogStartPos));
-	pDevice->SetRenderState(D3DRS_FOGEND, *(DWORD*)(&fFogEndPos));
-
-	// フォグの密度の設定
-	pDevice->SetRenderState(D3DRS_FOGDENSITY, *(DWORD*)(&fFogDensity));
-
-	m_pSelectItem = CObject2D::Create();
-	m_pSelectItem->SetPos(D3DXVECTOR3(500.0f, 350.0f, 0.0f));
-	m_pSelectItem->SetSize(D3DXVECTOR3(300.0f, 350.0f, 0.0f));
-	m_pSelectItem->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-	m_pSelectItem->LoadTex(-1);
-
-	m_pSelectItem2 = CObject2D::Create();
-	m_pSelectItem2->SetPos(D3DXVECTOR3(800.0f, 350.0f, 0.0f));
-	m_pSelectItem2->SetSize(D3DXVECTOR3(300.0f, 350.0f, 0.0f));
-	m_pSelectItem2->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-	m_pSelectItem2->LoadTex(-1);
+	// 生存フラグ
+	SetPermanent(true);
 
 	return S_OK;
 }
 
 //=============================================================================
 // 終了
-// Author : 梶田大夢
+// Author : 唐﨑結斗
+// 概要 : テクスチャのポインタと頂点バッファの解放
 //=============================================================================
 void CSelectItem::Uninit()
-{// マウスの取得
-	CMouse *pMouse = CApplication::GetMouse();
-
-	// デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CApplication::GetRenderer()->GetDevice();
-
-	// サウンド情報の取得
-	CSound *pSound = CApplication::GetSound();
-
-	// サウンド終了
-	pSound->StopSound();
-
-	// フォグの有効設定
-	pDevice->SetRenderState(D3DRS_FOGENABLE, FALSE);
-
-	// マウスカーソルを出す
-	pMouse->SetShowCursor(true);
-
+{
 	// スコアの解放
 	Release();
 }
 
 //=============================================================================
 // 更新
-// Author : 梶田大夢
+// Author : 唐﨑結斗
+// 概要 : 更新を行う
 //=============================================================================
 void CSelectItem::Update()
 {
-	CKeyboard *pKeyboard = CApplication::GetKeyboard();
-
-	//頂点カラーの更新
-	if (m_Menu == 0)
+	if (CApplication::GetMode() == CApplication::MODE_GAME
+		&& !CApplication::GetFade()->GetFadeSituation())
 	{
-		m_pSelectItem->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-		m_pSelectItem2->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f));
-	}
-	else if (m_Menu == 1)
-	{
-		m_pSelectItem->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f));
-		m_pSelectItem2->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-	}
-
-	if (pKeyboard->GetTrigger(DIK_A))
-	{//←が入力されたとき
-	 //サウンドの再生
-		//PlaySound(SOUND_LABEL_SE_SEL);
-
-		m_Menu--;
-		if (m_Menu < 0)
-		{
-			m_Menu = 0;
+		if (m_bSelect)
+		{// 選択画面
+			Select();
 		}
 	}
-	else if (pKeyboard->GetTrigger(DIK_D))
-	{//→が入力されたとき
-	 //サウンドの再生
-		//PlaySound(SOUND_LABEL_SE_SEL);
-
-		m_Menu++;
-		if (m_Menu >= 2)
-		{
-			m_Menu = 1;
-		}
-	}
-
-	//メニュー選択でフェード移行
-	switch (m_Menu)
-	{
-	case 0:
-		if (pKeyboard->GetTrigger(DIK_RETURN) == true)
-		{
-			//サウンドの再生
-			//PlaySound(SOUND_LABEL_SE_DEC);
-
-			//モードのセット処理
-			CApplication::SetNextMode(CApplication::MODE_GAME);
-			break;
-		}
-	case 1:
-		if (pKeyboard->GetTrigger(DIK_RETURN) == true)
-		{
-			//サウンドの再生
-			//PlaySound(SOUND_LABEL_SE_DEC);
-
-			//モードのセット処理
-			CApplication::SetNextMode(CApplication::MODE_TUTORIAL);
-			break;
-		}
-	}
-
-#ifdef _DEBUG
-	//CDebugProc::Print("メニュー | 1 | 2 |\n", m_Menu);
-#endif // _DEBUG
 }
 
 //=============================================================================
 // 描画
-// Author : 梶田大夢
+// Author : 唐﨑結斗
+// 概要 : 描画を行う
 //=============================================================================
 void CSelectItem::Draw()
 {
 
+}
+
+//=============================================================================
+// 位置のセッター
+// Author : 唐﨑結斗
+// 概要 : 位置のメンバ変数に引数を代入
+//=============================================================================
+void CSelectItem::SetPos(const D3DXVECTOR3 &pos)
+{
+	m_pos = pos;
+}
+
+//=============================================================================
+// 向きのセッター
+// Author : 唐﨑結斗
+// 概要 : 向きのメンバ変数に引数を代入
+//=============================================================================
+void CSelectItem::SetRot(const D3DXVECTOR3 &rot)
+{
+	m_rot = rot;
+}
+
+//=============================================================================
+// 大きさのセッター
+// Author : 唐﨑結斗
+// 概要 : 大きさのメンバ変数に引数を代入
+//=============================================================================
+void CSelectItem::SetSize(const D3DXVECTOR3 & size)
+{
+	m_size = size;
+}
+
+//=============================================================================
+// 色のセッター
+// Author : 唐﨑結斗
+// 概要 : 色の設定を行う
+//=============================================================================
+void CSelectItem::SetColor(const D3DXCOLOR & col)
+{
+
+}
+
+//=============================================================================
+// ポーズのセッター
+// Author : 唐﨑結斗
+// 概要 : ポーズの設定を行う
+//=============================================================================
+void CSelectItem::SetPause(const bool bPause, const bool bSelect)
+{
+	m_bPause = bPause;
+	CSuper::SetPause(m_bPause);
+
+	if (m_bPause)
+	{
+		m_bSelect = true;
+
+		// セレクト背景オブジェクト
+		m_pSelectBGObj = CObject2D::Create();
+		m_pSelectBGObj->SetSize(m_size);
+		m_pSelectBGObj->SetPos(m_pos);
+		m_pSelectBGObj->LoadTex(-1);
+		m_pSelectBGObj->SetCol(D3DXCOLOR(0.7f, 0.7f, 0.2f, 0.5f));
+		m_pSelectBGObj->SetObjType(CObject::OBJTYPE_SELECT_ITEM);
+
+		// スロットオブジェクト
+		m_pSlotObj = CObject2D::Create();
+		m_pSlotObj->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y + 100.0f, m_pos.z));
+		m_pSlotObj->SetSize(D3DXVECTOR3(300.0f, 150.0f, 0.0f));
+		m_pSlotObj->LoadTex(-1);
+		m_pSlotObj->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+		m_pSlotObj->SetObjType(CObject::OBJTYPE_SELECT_ITEM);
+
+		// アイテムオブジェクト
+		m_pItemObj = CObject2D::Create();
+		m_pItemObj->SetPos(D3DXVECTOR3(m_pos.x,m_pos.y - 100.0f,m_pos.z));
+		m_pItemObj->SetSize(D3DXVECTOR3(300.0f, 150.0f, 0.0f));
+		m_pItemObj->LoadTex(-1);
+		m_pItemObj->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+		m_pItemObj->SetObjType(CObject::OBJTYPE_SELECT_ITEM);
+	}
+	else
+	{
+		if (m_bSelect)
+		{
+			m_bSelect = false;
+
+			// ポーズ背景オブジェクト
+			m_pSelectBGObj->Uninit();
+
+			// スロットオブジェクト
+			m_pSlotObj->Uninit();
+
+			// アイテムオブジェクト
+			m_pItemObj->Uninit();
+		}
+	}
+}
+
+//=============================================================================
+// ポーズのセッター
+// Author : 唐﨑結斗
+// 概要 : ポーズの設定を行う
+//=============================================================================
+void CSelectItem::SetPause(const bool bPause)
+{
+	m_bPause = bPause;
+	CSuper::SetPause(m_bPause);
+	m_bSelect = false;
+}
+
+//=============================================================================
+// オブジェクトの点滅
+// Author : 唐﨑結斗
+// 概要 : 指定のオブジェクトを点滅させる
+//=============================================================================
+void CSelectItem::FlashObj()
+{
+	CObject2D *pObj = nullptr;
+
+	if (m_bPressEnter)
+	{
+		m_fAddAlpha += 0.07f;
+	}
+	else if (!m_bPressEnter)
+	{
+		m_fAddAlpha += 0.5f;
+		m_nCntFrame++;
+	}
+
+	switch (m_nextMode)
+	{
+	case MODE_SLOT:
+		pObj = m_pSlotObj;
+		m_pItemObj->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+		break;
+
+	case MODE_ITEM:
+		pObj = m_pItemObj;
+		m_pSlotObj->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+		break;
+
+	default:
+		assert(false);
+		break;
+	}
+
+	pObj->SetCol(D3DXCOLOR(0.7f, 0.7f, 0.7f, sinf(m_fAddAlpha) * 3.0f));
+}
+
+//=============================================================================
+// モードの選択
+// Author : 唐﨑結斗
+// 概要 : モードの選択する
+//=============================================================================
+void CSelectItem::SelectMode()
+{
+	int nMode = (int)m_nextMode;
+
+	// サウンド情報の取得
+	CSound *pSound = CApplication::GetSound();
+
+	// 入力情報の取得
+	CKeyboard *pKeyboard = CApplication::GetKeyboard();
+
+	if (pKeyboard->GetTrigger(DIK_W))
+	{
+		//pSound->PlaySound(CSound::SOUND_LABEL_SE_SELECT);
+		nMode--;
+
+		if (nMode < 0)
+		{
+			nMode = 1;
+		}
+	}
+	else if (pKeyboard->GetTrigger(DIK_S))
+	{
+		//pSound->PlaySound(CSound::SOUND_LABEL_SE_SELECT);
+		nMode++;
+
+		if (nMode > 1)
+		{
+			nMode = 0;
+		}
+	}
+
+	m_nextMode = (NEXT_MODE)nMode;
+}
+
+//=============================================================================
+// 選択画面
+// Author : 唐﨑結斗
+// 概要 : 選択画面
+//=============================================================================
+void CSelectItem::Select()
+{
+	// サウンド情報の取得
+	CSound *pSound = CApplication::GetSound();
+
+	// 入力情報の取得
+	CKeyboard *pKeyboard = CApplication::GetKeyboard();
+
+	if (m_bPause)
+	{
+		if (m_bPressEnter)
+		{
+			SelectMode();
+		}
+
+		FlashObj();
+
+		if (m_bPressEnter
+			&& pKeyboard->GetTrigger(DIK_RETURN))
+		{
+			//pSound->PlaySound(CSound::SOUND_LABEL_SE_DECIDE);
+			m_bPressEnter = false;
+		}
+
+		if (!m_bPressEnter
+			&& m_nCntFrame >= 40)
+		{
+			m_bPressEnter = true;
+			m_nCntFrame = 0;
+
+			switch (m_nextMode)
+			{
+			case MODE_SLOT:
+				SetPause(false, false);
+				//CApplication::SetNextMode(CApplication::MODE_TITLE);
+				break;
+
+			case MODE_ITEM:
+				SetPause(false, false);
+				//CApplication::SetNextMode(CApplication::MODE_GAME);
+				break;
+
+			default:
+				assert(false);
+				break;
+			}
+		}
+	}
 }

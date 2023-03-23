@@ -35,6 +35,7 @@
 #include "fade.h"
 #include "collision.h"
 #include "pause.h"
+#include "select_item.h"
 #include "tutorial.h"
 #include "joypad.h"
 #include "select_item.h"
@@ -56,6 +57,7 @@ CFade *CApplication::m_pFade = nullptr;								// フェードクラス
 CLight *CApplication::m_pLight = nullptr;							// ライトクラス
 CSound *CApplication::m_pSound = nullptr;							// サウンドクラス
 CPause *CApplication::m_pPause = nullptr;							// ポーズクラス
+CSelectItem *CApplication::m_pSelectItem = nullptr;					// セレクトアイテム
 CJoypad *CApplication::m_pJoy = nullptr;							// ジョイパッドクラス
 int CApplication::m_nPriority = 0;									// プライオリティ番号
 int CApplication::m_nScore = 0;										// 現在のスコア
@@ -186,10 +188,6 @@ void CApplication::SetMode(SCENE_MODE mode)
 		pSceneMode = new CTutorial;
 		break;
 
-	case CApplication::MODE_SELECTITEM:
-		pSceneMode = new CSelectItem;
-		break;
-
 	default:
 		break;
 	}
@@ -318,6 +316,10 @@ HRESULT CApplication::Init(HINSTANCE hInstance, HWND hWnd)
 	// ポーズの生成
 	m_pPause = CPause::Create();
 	m_pPause->SetPos(D3DXVECTOR3(640.0f, 360.0f, 0.0f));
+
+	// アイテムセレクトの生成
+	m_pSelectItem = CSelectItem::Create();
+	m_pSelectItem->SetPos(D3DXVECTOR3(640.0f, 360.0f, 0.0f));
 
 	return S_OK;
 }
