@@ -15,6 +15,7 @@
 #include "collision_rectangle3D.h"
 #include "renderer.h"
 #include "game.h"
+#include "enemy.h"
 #include "player.h"
 #include "application.h"
 
@@ -23,7 +24,7 @@
 // Author : 髙野馨將
 // 概要 : 地雷を生成する
 //=============================================================================
-CMine * CMine::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size)
+CMine * CMine::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, int nDamage)
 {
 	// オブジェクトインスタンス
 	CMine *pMine = nullptr;
@@ -35,6 +36,7 @@ CMine * CMine::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 
 	// エネミーの初期化
 	pMine->Init();
+	pMine->m_nDamage = nDamage;
 	pMine->SetPos(pos);
 	pMine->SetSize(size);
 	pMine->m_pCollisionRectangle3D->SetSize(D3DXVECTOR3(size.x * 2.0f, size.y * 2.0f, 10.0f));
@@ -50,7 +52,8 @@ CMine * CMine::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 //=============================================================================
 CMine::CMine()
 {
-
+	// タイプの付与
+	SetObjType(OBJETYPE_MINE);
 }
 
 //=============================================================================
@@ -71,6 +74,7 @@ CMine::~CMine()
 HRESULT CMine::Init()
 {// 初期化処理
 	CSkill::Init();
+	m_nDamage = 0;
 
 	return S_OK;
 }
@@ -96,7 +100,18 @@ void CMine::Uninit()
 //=============================================================================
 void CMine::Update()
 {// 更新処理
+	// 当たり判定
+	if (m_pCollisionRectangle3D->Collision(CObject::OBJETYPE_ENEMY, false))
+	{
+		// 当たった相手の情報を持ってくるを
+		CEnemy *pEnemy = (CEnemy*)m_pCollisionRectangle3D->GetCollidedObj();
+		//ライフの減少
+		pEnemy->SetLife(pEnemy->GetLife() - m_nDamage);
+		// 終了処理
+		Uninit();
 
+		return;
+	}
 }
 
 //=============================================================================

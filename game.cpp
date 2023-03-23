@@ -93,7 +93,7 @@ HRESULT CGame::Init()
 	m_pTime->SetPos(D3DXVECTOR3(640.0f, m_pTime->GetSize().y / 2.0f, 0.0f));
 
 	// プレイヤー生成
-	m_pPlayer = CPlayer::Create(D3DXVECTOR3(50.0f, 0.0f, 100.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f));
+	m_pPlayer = CPlayer::Create(D3DXVECTOR3(50.0f, 0.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f));
 
 	// カメラの追従設定(目標 : プレイヤー)
 	CCamera *pCamera = CApplication::GetCamera();
@@ -118,10 +118,13 @@ HRESULT CGame::Init()
 	//pMesh->SetScrollTex(move, bScrollTex);
 	//pMesh->SetUseCollison(bCollison);
 
-	CMine::Create(D3DXVECTOR3(100.0f, 0.0f, 100.0f), D3DXVECTOR3(200.0f, 200.0f, 0.0f));
+	// 地雷
+	CMine::Create(D3DXVECTOR3(100.0f, 50.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f),1);
+	CMine::Create(D3DXVECTOR3(200.0f, 50.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f),1);
+	CMine::Create(D3DXVECTOR3(300.0f, 50.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f),2);
 
 	// エネミー
-	m_pEnemy = CEnemy::Create(D3DXVECTOR3(100.0f,0.0f,100.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f));
+	m_pEnemy = CEnemy::Create(D3DXVECTOR3(100.0f,0.0f,0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f),3);
 
 	// マウスカーソルを消す
 	pMouse->SetShowCursor(false);
@@ -203,7 +206,7 @@ void CGame::Update()
 		CApplication::SetNextMode(CApplication::MODE_SELECTITEM);
 	}
 
-	if (!m_bGame)
+	if (!m_bGame || pKeyboard->GetTrigger(DIK_V))
 	{
 		CApplication::SetNextMode(CApplication::MODE_RESULT);
 	}

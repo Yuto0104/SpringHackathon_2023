@@ -30,7 +30,7 @@ public:
 	//--------------------------------------------------------------------
 	// 静的メンバ関数
 	//--------------------------------------------------------------------
-	static CEnemy *Create(D3DXVECTOR3 pos, D3DXVECTOR3 size);				// エネミーの生成
+	static CEnemy *Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, int nLife);			// エネミーの生成
 
 	//--------------------------------------------------------------------
 	// コンストラクタとデストラクタ
@@ -46,13 +46,15 @@ public:
 	void Update() override;															// 更新
 	void Draw() override;															// 描画
 
+	void SetLife(int nLife) { m_nLife = nLife; }									// 体力の設定
+	int GetLife() { return m_nLife; }												// 体力の取得
 private:
 	//--------------------------------------------------------------------
 	// メンバ変数
 	//--------------------------------------------------------------------
 	CCollision_Rectangle3D *m_pCollisionRectangle3D;        // 3D矩形の当たり判定
 	D3DXVECTOR3				m_move;							// 移動量
-	int m_nLife;											// 体力
+	int						m_nLife;						// 体力
 };
 
 #endif
