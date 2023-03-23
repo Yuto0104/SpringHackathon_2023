@@ -48,9 +48,10 @@
     <ClCompile Include="title.cpp" />
     <ClCompile Include="tutorial.cpp" />
     <ClCompile Include="select_item.cpp" />
+    <ClCompile Include="lille.cpp" />
     <ClCompile Include="mine.cpp" />
     <ClCompile Include="skill.cpp" />
-    <ClCompile Include="lille.cpp" />
+    <ClCompile Include="bullet3D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.h" />
@@ -100,8 +101,9 @@
     <ClInclude Include="title.h" />
     <ClInclude Include="tutorial.h" />
     <ClInclude Include="select_item.h" />
+    <ClInclude Include="lille.h" />
     <ClInclude Include="mine.h" />
     <ClInclude Include="skill.h" />
-    <ClInclude Include="lille.h" />
+    <ClInclude Include="bullet3D.h" />
   </ItemGroup>
 </Project>
