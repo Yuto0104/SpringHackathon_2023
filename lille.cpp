@@ -25,6 +25,7 @@
 #include "forcefield.h"
 #include "game.h"
 #include "player.h"
+#include "mine.h"
 
 //=============================================================================
 // インスタンス生成
@@ -144,6 +145,13 @@ void CLille::Update()
 			pPlayer = CGame::GetPlayer();
 
 			CForceField::Create(pPlayer->GetPos(), D3DXVECTOR3(60.0f, 60.0f, 0.0f));
+		}
+		else
+		{
+			CPlayer * pPlayer = nullptr;
+			pPlayer = CGame::GetPlayer();
+
+			CMine::Create(pPlayer->GetPos(), D3DXVECTOR3(20.0f, 20.0f, 0.0f), 10);
 		}
 	}
 }
