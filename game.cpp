@@ -32,6 +32,7 @@
 #include "calculation.h"
 #include "select_item.h"
 #include "lille.h"
+#include "life.h"
 
 //*****************************************************************************
 // 静的メンバ変数宣言
@@ -97,6 +98,9 @@ HRESULT CGame::Init()
 	m_pTime->SetTimeAdd(false);
 	m_pTime->SetPos(D3DXVECTOR3(640.0f, m_pTime->GetSize().y / 2.0f, 0.0f));
 
+	// HP
+	CLife::Create(4);
+
 	// プレイヤー生成
 	m_pPlayer = CPlayer::Create(D3DXVECTOR3(50.0f, 0.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f));
 
@@ -122,7 +126,7 @@ HRESULT CGame::Init()
 	//pMesh->SetUseCollison(bCollison);
 
 	// 地雷
-	CMine::Create(D3DXVECTOR3(100.0f, 50.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f),1);
+	CMine::Create(D3DXVECTOR3(100.0f, 50.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f),10);
 	CMine::Create(D3DXVECTOR3(200.0f, 50.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f),1);
 	CMine::Create(D3DXVECTOR3(300.0f, 50.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f),2);
 
@@ -239,6 +243,23 @@ void CGame::Update()
 	{//一定以上ならスポーンさせて0にする
 		EnemySpawn();
 		m_nSpawnTime = 0;
+	}
+
+	// ライフ0以下だと
+	if (m_pPlayer != nullptr)
+	{
+		if (m_pPlayer->GetLife() <= 0)
+		{// リザルトへ
+			CApplication::SetNextMode(CApplication::MODE_RESULT);
+			// 終了処理
+			m_pPlayer->Uninit();
+			//プレイヤーのポインタを初期化
+			m_pPlayer = nullptr;
+			CCamera *pCamera = CApplication::GetCamera();
+			pCamera->SetFollowTarget(false);
+
+			return;
+		}
 	}
 
 	if (!m_bGame)

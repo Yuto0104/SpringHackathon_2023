@@ -48,6 +48,9 @@ private:
 	int m_nMineCT;														//地雷のクールタイム
 	int m_nLife;														//体力
 	int m_nBulletCreateTime;
+
+	bool m_SkillFlag;														//スキルのフラグ
+	int m_nInvincibleCnt;												//無敵時間
 };
 
 #endif
