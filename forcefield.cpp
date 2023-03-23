@@ -103,24 +103,28 @@ void CForceField::Uninit()
 //=============================================================================
 void CForceField::Update()
 {// 更新処理
-	 //位置の取得
-	D3DXVECTOR3 PlayerPos = CGame::GetPlayer()->GetPos();
-
-	m_AttackTime--;
-
-	if (m_AttackTime <= 0)
+	CPlayer *pPlayer = CGame::GetPlayer();
+	if (pPlayer != nullptr)
 	{
-		// 当たり判定
-		if (m_pCollisionRectangle3D->Collision(CObject::OBJETYPE_ENEMY, false))
+		//位置の取得
+		D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
+
+		m_AttackTime--;
+
+		if (m_AttackTime <= 0)
 		{
-			// 当たった相手の情報を持ってくるを
-			CEnemy *pEnemy = (CEnemy*)m_pCollisionRectangle3D->GetCollidedObj();
-			//ライフの減少
-			pEnemy->SetLife(pEnemy->GetLife() - m_nDamage);
-			m_AttackTime = 50;
+			// 当たり判定
+			if (m_pCollisionRectangle3D->Collision(CObject::OBJETYPE_ENEMY, false))
+			{
+				// 当たった相手の情報を持ってくるを
+				CEnemy *pEnemy = (CEnemy*)m_pCollisionRectangle3D->GetCollidedObj();
+				//ライフの減少
+				pEnemy->SetLife(pEnemy->GetLife() - m_nDamage);
+				m_AttackTime = 50;
+			}
 		}
+		SetPos(PlayerPos);
 	}
-	SetPos(PlayerPos);
 }
 
 //=============================================================================

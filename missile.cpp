@@ -100,38 +100,41 @@ void CMissile::Uninit()
 //=============================================================================
 void CMissile::Update()
 {// XVˆ—
+	CPlayer *pPlayer = CGame::GetPlayer();
 
-	D3DXVECTOR3 PlayerPos = CGame::GetPlayer()->GetPos();
-	if (CGame::GetEnemy() != nullptr)
+	if (pPlayer != nullptr)
 	{
-		D3DXVECTOR3 EnemyPos = CGame::GetEnemy()->GetPos();
-
-		m_BulletMove = PlayerPos - EnemyPos;
-		D3DXVec3Normalize(&m_BulletMove, &m_BulletMove);
-		m_BulletMove *= 15.0f;
-
-		m_nNormalTime--;
-		m_MissileTime--;
-
-		if (m_nNormalTime <= 0)
+		D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
+		if (CGame::GetEnemy() != nullptr)
 		{
-			m_pBullet = CBullet::Create(PlayerPos, -m_BulletMove, D3DXVECTOR3(5.0f, 5.0f, 0.0f), 100, CBullet::BulletType_Normal);
-		}
-		if (m_nNormalTime <= 0)
-		{
-			m_nNormalTime = 40;
-		}
+			D3DXVECTOR3 EnemyPos = CGame::GetEnemy()->GetPos();
 
-		if (m_MissileTime <= 0)
-		{
-			m_pBullet = CBullet::Create(PlayerPos, -m_BulletMove, D3DXVECTOR3(25.0f, 25.0f, 0.0f), 100, CBullet::BulletType_Missile);
-		}
-		if (m_MissileTime <= 0)
-		{
-			m_MissileTime = 250;
+			m_BulletMove = PlayerPos - EnemyPos;
+			D3DXVec3Normalize(&m_BulletMove, &m_BulletMove);
+			m_BulletMove *= 15.0f;
+
+			m_nNormalTime--;
+			m_MissileTime--;
+
+			if (m_nNormalTime <= 0)
+			{
+				m_pBullet = CBullet::Create(PlayerPos, -m_BulletMove, D3DXVECTOR3(5.0f, 5.0f, 0.0f), 100, CBullet::BulletType_Normal);
+			}
+			if (m_nNormalTime <= 0)
+			{
+				m_nNormalTime = 40;
+			}
+
+			if (m_MissileTime <= 0)
+			{
+				m_pBullet = CBullet::Create(PlayerPos, -m_BulletMove, D3DXVECTOR3(25.0f, 25.0f, 0.0f), 100, CBullet::BulletType_Missile);
+			}
+			if (m_MissileTime <= 0)
+			{
+				m_MissileTime = 250;
+			}
 		}
 	}
-
 }
 
 //=============================================================================
