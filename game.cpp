@@ -159,6 +159,8 @@ HRESULT CGame::Init()
 	//‰Šú‰»
 	m_bGame = true;
 	m_nSpawnTime = 0;
+	m_bSelectItem = true;
+	m_bSelectItem2 = true;
 
 	return S_OK;
 }
@@ -223,16 +225,31 @@ void CGame::Update()
 		pPause->SetPause(false, false);
 	}
 
-	if (!pSelect->GetPause()
-		&& pKeyboard->GetTrigger(DIK_H))
+	if (m_pTime->GetTime() == 100)
 	{
-		pSelect->SetPause(true, true);
-
+		if (m_bSelectItem)
+		{
+			pSelect->SetPause(true, true);
+			m_bSelectItem = false;
+		}
 	}
-	else if (pSelect->GetPause()
-		&& pKeyboard->GetTrigger(DIK_H))
+
+	if (m_pTime->GetTime() == 80)
 	{
-		pSelect->SetPause(false, false);
+		if (m_bSelectItem2)
+		{
+			pSelect->SetPause(true, true);
+			m_bSelectItem2 = false;
+		}
+	}
+
+	if (m_pTime->GetTime() == 50)
+	{
+		if (m_bSelectItem3)
+		{
+			pSelect->SetPause(true, true);
+			m_bSelectItem3 = false;
+		}
 	}
 
 	if (m_nSpawnTime < 60)

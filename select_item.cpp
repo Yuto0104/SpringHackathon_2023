@@ -414,6 +414,8 @@ void CSelectItem::Select()
 				int PlayerLife = pPlayer->GetLife();
 				PlayerLife += 1;
 				pPlayer->SetLife(PlayerLife);
+
+				m_bPause = false;
 			}
 			break;
 
