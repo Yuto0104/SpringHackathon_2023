@@ -172,6 +172,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="manager.cpp" />
     <ClCompile Include="mesh.cpp" />
+    <ClCompile Include="mine.cpp" />
     <ClCompile Include="model3D.cpp" />
     <ClCompile Include="model_obj.cpp" />
     <ClCompile Include="motion.cpp" />
@@ -192,6 +193,7 @@
     <ClCompile Include="scene_mode.cpp" />
     <ClCompile Include="score.cpp" />
     <ClCompile Include="select_item.cpp" />
+    <ClCompile Include="skill.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="super.cpp" />
     <ClCompile Include="tcp_client.cpp" />
@@ -222,6 +224,7 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="manager.h" />
     <ClInclude Include="mesh.h" />
+    <ClInclude Include="mine.h" />
     <ClInclude Include="model3D.h" />
     <ClInclude Include="model_obj.h" />
     <ClInclude Include="motion.h" />
@@ -242,6 +245,7 @@
     <ClInclude Include="scene_mode.h" />
     <ClInclude Include="score.h" />
     <ClInclude Include="select_item.h" />
+    <ClInclude Include="skill.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="super.h" />
     <ClInclude Include="tcp_client.h" />
