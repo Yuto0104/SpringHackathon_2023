@@ -57,6 +57,7 @@ public:
 	D3DXVECTOR3 GetSize()  override { return m_size; }								// 大きさのゲッター
 	D3DXVECTOR3 GetWholeSize() { return m_wholeSize; }								// 全体の大きさのゲッター
 	void SetTime(int nTime);														// タイムのセッター
+	int GetTime() { return m_nTime; }												//タイムの取得
 	void SetNumber();																// ナンバーの設定
 	void CalTime();																	// タイムの算出
 	void SetTimeAdd(bool bAdd) { m_bAdd = bAdd; }									// 加算

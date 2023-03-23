@@ -144,7 +144,6 @@ void CLille::Update()
 			pPlayer = CGame::GetPlayer();
 
 			CForceField::Create(pPlayer->GetPos(), D3DXVECTOR3(60.0f, 60.0f, 0.0f));
-			
 		}
 	}
 }

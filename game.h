@@ -73,6 +73,9 @@ public:
 	// メンバ変数
 	//--------------------------------------------------------------------
 	int m_nSpawnTime;							// スポーン時間
+	bool m_bSelectItem;							// アイテム選択
+	bool m_bSelectItem2;						// アイテム選択
+	bool m_bSelectItem3;						// アイテム選択
 };
 
 #endif
