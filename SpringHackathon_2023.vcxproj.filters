@@ -49,6 +49,7 @@
     <ClCompile Include="tutorial.cpp" />
     <ClCompile Include="select_item.cpp" />
     <ClCompile Include="mine.cpp" />
+    <ClCompile Include="skill.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.h" />
@@ -99,5 +100,6 @@
     <ClInclude Include="tutorial.h" />
     <ClInclude Include="select_item.h" />
     <ClInclude Include="mine.h" />
+    <ClInclude Include="skill.h" />
   </ItemGroup>
 </Project>

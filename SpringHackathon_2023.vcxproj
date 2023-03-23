@@ -192,6 +192,7 @@
     <ClCompile Include="scene_mode.cpp" />
     <ClCompile Include="score.cpp" />
     <ClCompile Include="select_item.cpp" />
+    <ClCompile Include="skill.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="super.cpp" />
     <ClCompile Include="tcp_client.cpp" />
@@ -242,6 +243,7 @@
     <ClInclude Include="scene_mode.h" />
     <ClInclude Include="score.h" />
     <ClInclude Include="select_item.h" />
+    <ClInclude Include="skill.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="super.h" />
     <ClInclude Include="tcp_client.h" />
