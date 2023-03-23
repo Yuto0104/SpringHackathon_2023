@@ -52,9 +52,8 @@ CTitle::~CTitle()
 //=============================================================================
 HRESULT CTitle::Init()
 {
-	// ƒTƒEƒ“ƒhî•ñ‚ÌŽæ“¾
-	CSound *pSound = CApplication::GetSound();
-	//pSound->PlaySound(CSound::SOUND_LABEL_BGM000);
+	//SE
+	CApplication::GetSound()->Play(CSound::SOUND_LABEL_BGM_BGM000);
 
 	m_pTitleLogo = CObject2D::Create();
 	m_pTitleLogo->SetPos(D3DXVECTOR3(640.0f, 280.0f, 0.0f));
@@ -123,7 +122,8 @@ void CTitle::Update()
 	if (m_bPressEnter
 		&& pKeyboard->GetTrigger(DIK_RETURN))
 	{
-		//pSound->PlaySound(CSound::SOUND_LABEL_SE_DECIDE);
+		//SE
+		CApplication::GetSound()->Play(CSound::SOUND_LABEL_SE_ENTER);
 		m_bPressEnter = false;
 	}
 
