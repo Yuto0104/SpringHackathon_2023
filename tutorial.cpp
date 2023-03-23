@@ -134,7 +134,7 @@ void CTutorial::Uninit()
 	CSound *pSound = CApplication::GetSound();
 
 	// サウンド終了
-	pSound->StopSound();
+	pSound->Stop();
 
 	// フォグの有効設定
 	pDevice->SetRenderState(D3DRS_FOGENABLE, FALSE);

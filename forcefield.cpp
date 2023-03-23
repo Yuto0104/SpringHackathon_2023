@@ -17,6 +17,7 @@
 #include "game.h"
 #include "player.h"
 #include "enemy.h"
+#include "sound.h"
 #include "application.h"
 
 //=============================================================================
@@ -120,6 +121,9 @@ void CForceField::Update()
 				CEnemy *pEnemy = (CEnemy*)m_pCollisionRectangle3D->GetCollidedObj();
 				//ライフの減少
 				pEnemy->SetLife(pEnemy->GetLife() - m_nDamage);
+				// サウンド情報の取得
+				CApplication::GetSound()->Play(CSound::SOUND_LABEL_SE_HIT);
+
 				m_AttackTime = 50;
 			}
 		}

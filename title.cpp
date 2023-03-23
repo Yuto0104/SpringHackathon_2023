@@ -94,7 +94,7 @@ void CTitle::Uninit()
 	CSound *pSound = CApplication::GetSound();
 
 	// サウンド終了
-	pSound->StopSound();
+	pSound->Stop();
 
 	// スコアの解放
 	Release();

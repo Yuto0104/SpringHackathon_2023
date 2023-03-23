@@ -20,6 +20,7 @@
 #include "forcefield.h"
 #include "missile.h"
 #include "bullet3D.h"
+#include "sound.h"
 
 //=============================================================================
 //							静的変数の初期化
@@ -121,6 +122,9 @@ void CPlayer::Update(void)
 	{
 		// 体力の減少
 		m_nLife--;
+		// サウンド情報の取得
+		//SE
+		CApplication::GetSound()->Play(CSound::SOUND_LABEL_SE_HIT);
 		// 無敵時間の設定
 		m_nInvincibleCnt = 60;
 
