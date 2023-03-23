@@ -207,6 +207,9 @@
     <ClCompile Include="motion.cpp">
       <Filter>ソース ファイル\Utility</Filter>
     </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>ソース ファイル\Object\3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="input.h">
@@ -340,6 +343,9 @@
     </ClInclude>
     <ClInclude Include="motion.h">
       <Filter>ヘッダー ファイル\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>ヘッダー ファイル\Object\3D</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
