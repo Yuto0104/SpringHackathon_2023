@@ -107,8 +107,8 @@ HRESULT CGame::Init()
 	CMesh3D *pMesh = CMesh3D::Create();
 	assert(pMesh != nullptr);
 	// ”’l‚ÌÝ’è
-	pMesh->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	pMesh->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	pMesh->SetPos(D3DXVECTOR3(0.0f, 0.0f, 1000.0f));
+	pMesh->SetRot(D3DXVECTOR3(D3DX_PI * -0.5f, 0.0f, 0.0f));
 	pMesh->SetSize(D3DXVECTOR3(10000.0f, 0.0f, 10000.0f));
 	pMesh->SetCol(D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
 	//pMesh->LoadTex(nType);
