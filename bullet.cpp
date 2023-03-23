@@ -74,6 +74,7 @@ HRESULT CBullet::Init(void)
 
 	//オブジェクト基礎の初期化処理
 	CObject3D::Init();
+	LoadTex(15);
 
 	return S_OK;
 }

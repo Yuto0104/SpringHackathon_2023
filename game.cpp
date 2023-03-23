@@ -231,7 +231,8 @@ void CGame::Update()
 		pSelect->SetPause(false, false);
 	}
 
-	if (m_nSpawnTime < 60)
+	if (m_nSpawnTime < 60
+		&& !pSelect->GetPause())
 	{//スポーン時間が一定以下なら加算する
 		m_nSpawnTime++;
 	}
@@ -239,6 +240,20 @@ void CGame::Update()
 	{//一定以上ならスポーンさせて0にする
 		EnemySpawn();
 		m_nSpawnTime = 0;
+	}
+
+	if (m_pTime->GetTimeEnd()
+		&& m_bGame)
+	{
+		m_bGame = false;
+
+		// カメラの追従設定
+		pCamera = CApplication::GetCamera();
+		pCamera->SetFollowTarget(false);
+		pCamera->SetFollowTarget(false);
+
+		// スコアの設定
+		CApplication::SetScore(m_pScore->GetScore());
 	}
 
 	if (!m_bGame)

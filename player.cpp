@@ -54,6 +54,7 @@ HRESULT CPlayer::Init(void)
 	m_nLife = 10;
 	m_nBulletCreateTime = 0;
 	m_nMineCT = 0;									//クールタイム
+	m_bTex = false;
 
 	// 3D矩形の当たり判定の設定
 	m_pCollisionRectangle3D = CCollision_Rectangle3D::Create();
@@ -62,6 +63,10 @@ HRESULT CPlayer::Init(void)
 	m_pCollisionRectangle3D->SetSize(D3DXVECTOR3(45.0f, 45.0f, 20.0f));
 
 	CObject3D::Init();
+
+	// テクスチャ座標の設定
+	SetTex(D3DXVECTOR2(0.0f, 0.0f), D3DXVECTOR2(1.0f / 2, 1.0f));
+	LoadTex(1);
 
 	return S_OK;
 }
@@ -114,6 +119,17 @@ void CPlayer::Update(void)
 	m_move.x += (0.0f - m_move.x) * 0.1f;
 	m_move.y += (0.0f - m_move.y) * 0.1f;
 	m_move.z += (0.0f - m_move.z) * 0.1f;
+
+	if (m_bTex)
+	{
+		// テクスチャ座標の設定
+		SetTex(D3DXVECTOR2(0.0f, 0.0f), D3DXVECTOR2(1.0f / 2, 1.0f));
+	}
+	else
+	{
+		// テクスチャ座標の設定
+		SetTex(D3DXVECTOR2(0.5f, 0.0f), D3DXVECTOR2(1.0f, 1.0f));
+	}
 
 	//当たり判定
 	if (m_pCollisionRectangle3D->Collision(CObject::OBJETYPE_ENEMY, true))
@@ -174,6 +190,8 @@ void CPlayer::PlayerController(void)
 			m_move.y -= cosf(D3DX_PI * 0.75f + cameraRot.y) * m_MaxWalkingSpeed;
 
 			m_rot.y = cameraRot.y - D3DX_PI * 0.25f;
+
+			m_bTex = true;
 		}
 		else if (pKeyboard->GetPress(DIK_RIGHT))
 		{//Dキーも押された場合
@@ -181,6 +199,8 @@ void CPlayer::PlayerController(void)
 			m_move.y += cosf(D3DX_PI * 0.25f + cameraRot.y) * m_MaxWalkingSpeed;
 
 			m_rot.y = cameraRot.y + D3DX_PI * 0.25f;
+
+			m_bTex = false;
 		}
 		else
 		{//Wキーだけが押された場合
@@ -198,6 +218,8 @@ void CPlayer::PlayerController(void)
 			m_move.y -= cosf(D3DX_PI * 0.25f + cameraRot.y) * m_MaxWalkingSpeed;
 
 			m_rot.y = cameraRot.y - D3DX_PI * 0.75f;
+
+			m_bTex = true;
 		}
 		else if (pKeyboard->GetPress(DIK_RIGHT))
 		{//Dキーも押された場合
@@ -205,6 +227,8 @@ void CPlayer::PlayerController(void)
 			m_move.y += cosf(D3DX_PI * 0.75f + cameraRot.y) * m_MaxWalkingSpeed;
 
 			m_rot.y = cameraRot.y + D3DX_PI * 0.75f;
+
+			m_bTex = false;
 		}
 		else
 		{//Sキーだけが押された場合
@@ -220,6 +244,8 @@ void CPlayer::PlayerController(void)
 		m_move.y += cosf(D3DX_PI * 0.5f + cameraRot.y) * m_MaxWalkingSpeed;
 
 		m_rot.y = cameraRot.y + D3DX_PI* 0.5f;
+
+		m_bTex = false;
 	}
 	else if (pKeyboard->GetPress(DIK_LEFT))
 	{//Aキーだけ押された場合
@@ -227,5 +253,7 @@ void CPlayer::PlayerController(void)
 		m_move.y -= cosf(D3DX_PI * 0.5f + cameraRot.y) * m_MaxWalkingSpeed;
 
 		m_rot.y = cameraRot.y - D3DX_PI * 0.5f;
+
+		m_bTex = true;
 	}
 }

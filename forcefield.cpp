@@ -72,12 +72,13 @@ CForceField::~CForceField()
 //=============================================================================
 HRESULT CForceField::Init()
 {// ‰Šú‰»ˆ—
-
 	// ƒƒ“ƒo•Ï”‚Ì‰Šú‰»
 	m_nDamage = 1;
 	m_AttackTime = 0;
 
 	CSkill::Init();
+
+	LoadTex(4);
 
 	return S_OK;
 }

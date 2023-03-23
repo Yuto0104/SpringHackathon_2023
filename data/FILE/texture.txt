@@ -1,5 +1,5 @@
 // テクスチャの最大数
-MAX_TEXTURE = 5
+MAX_TEXTURE = 19
 
 //***************************
 // TEXTUREファイル名の読み込み
@@ -9,4 +9,18 @@ TEXTURE_FILENAME = data/TEXTURE/player000.png		# [1]
 TEXTURE_FILENAME = data/TEXTURE/field000.jpg		# [2]
 TEXTURE_FILENAME = data/TEXTURE/mine.png			# [3]
 TEXTURE_FILENAME = data/TEXTURE/barrier.png			# [4]
+TEXTURE_FILENAME = data/TEXTURE/TitleLog.png		# [5]
+TEXTURE_FILENAME = data/TEXTURE/TITLE.png			# [6]
+TEXTURE_FILENAME = data/TEXTURE/return.png			# [7]
+TEXTURE_FILENAME = data/TEXTURE/RANKING.png			# [8]
+TEXTURE_FILENAME = data/TEXTURE/NewGame.png			# [9]
+TEXTURE_FILENAME = data/TEXTURE/EXIT.png			# [10]
+TEXTURE_FILENAME = data/TEXTURE/pause100.png		# [11]
+TEXTURE_FILENAME = data/TEXTURE/Item.png			# [12]
+TEXTURE_FILENAME = data/TEXTURE/Slot.png			# [13]
+TEXTURE_FILENAME = data/TEXTURE/通信エラー.png		# [14]
+TEXTURE_FILENAME = data/TEXTURE/bullet.png			# [15]
+TEXTURE_FILENAME = data/TEXTURE/missile.png			# [16]
+TEXTURE_FILENAME = data/TEXTURE/background.png		# [17]
+TEXTURE_FILENAME = data/TEXTURE/enemy.png			# [18]
 

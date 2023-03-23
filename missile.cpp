@@ -75,6 +75,7 @@ HRESULT CMissile::Init()
 	m_BulletMove = D3DXVECTOR3(0.0f,0.0f,0.0f);
 
 	CSkill::Init();
+	LoadTex(16);
 
 	return S_OK;
 }
@@ -100,7 +101,6 @@ void CMissile::Uninit()
 //=============================================================================
 void CMissile::Update()
 {// XVˆ—
-
 	D3DXVECTOR3 PlayerPos = CGame::GetPlayer()->GetPos();
 	if (CGame::GetEnemy() != nullptr)
 	{

@@ -34,7 +34,6 @@ public:
 	enum NEXT_MODE
 	{
 		MODE_GAME = 0,			// ゲーム
-		MODE_TUTORIAL,			// チュートリアル
 		MODE_EXIT,				// 終了
 		MAX_MODE,				// シーンの最大数
 		MODE_NONE,				// シーン無し
@@ -67,7 +66,6 @@ private:
 	NEXT_MODE			m_nextMode;				// 次に設定するモード
 	CObject2D			*m_pTitleLogo;			// タイトルロゴオブジェクト
 	CObject2D			*m_pNewGame;			// ニューゲームオブジェクト
-	CObject2D			*m_pTutorial;			// チュートリアルオブジェクト
 	CObject2D			*m_pExit;				// 終了オブジェクト
 	float				m_fAddAlpha;			// フレーム数のカウント
 	int					m_nCntFrame;			// フレームカウント

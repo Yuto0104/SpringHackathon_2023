@@ -83,6 +83,10 @@ HRESULT CEnemy::Init()
 	m_pCollisionRectangle3D->SetSize(D3DXVECTOR3(45.0f, 45.0f, 10.0f));
 	m_nLife = 50;
 
+	// テクスチャ座標の設定
+	SetTex(D3DXVECTOR2(0.0f, 0.0f), D3DXVECTOR2(1.0f / 2, 1.0f));
+	LoadTex(18);
+
 	return S_OK;
 }
 
@@ -132,6 +136,15 @@ void CEnemy::Update()
 	// 位置の更新
 	pos += m_move;
 	SetPos(pos);
+
+	if (m_move.x >= 0.0f)
+	{// テクスチャ座標の設定
+		SetTex(D3DXVECTOR2(0.5f, 0.0f), D3DXVECTOR2(1.0f, 1.0f));
+	}
+	else if(m_move.x <= 0.0f)
+	{// テクスチャ座標の設定
+		SetTex(D3DXVECTOR2(0.0f, 0.0f), D3DXVECTOR2(1.0f / 2, 1.0f));	
+	}
 
 	// 当たり判定
 	m_pCollisionRectangle3D->Collision(CObject::OBJETYPE_PLAYER, true);

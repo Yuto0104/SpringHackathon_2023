@@ -43,10 +43,10 @@ public:
 	CBullet();									//コンストラクタ
 	~CBullet()override;							//デストラクタ
 
-	HRESULT Init(void)override;					//弾の初期化処理
-	void Uninit(void)override;					//弾の終了処理
-	void Update(void)override;					//弾の更新処理
-	void Draw(void)override;					//弾の描画処理
+	HRESULT Init(void) override;				//弾の初期化処理
+	void Uninit(void) override;					//弾の終了処理
+	void Update(void) override;					//弾の更新処理
+	void Draw(void) override;					//弾の描画処理
 
 	void HitEnemy(D3DXVECTOR3 pos,int life);											//弾と敵の当たり判定
 	void BulletLife();																	//弾の体力

@@ -188,7 +188,7 @@ void CPause::SetPause(const bool bPause, const bool bSelect)
 		m_pPauseBGObj = CObject2D::Create();
 		m_pPauseBGObj->SetSize(m_size);
 		m_pPauseBGObj->SetPos(m_pos);
-		m_pPauseBGObj->LoadTex(-1);
+		m_pPauseBGObj->LoadTex(11);
 		m_pPauseBGObj->SetCol(D3DXCOLOR(0.7f, 0.7f, 0.2f, 0.5f));
 		m_pPauseBGObj->SetObjType(CObject::OBJTYPE_PAUSE);
 
@@ -196,7 +196,7 @@ void CPause::SetPause(const bool bPause, const bool bSelect)
 		m_pReturnObj = CObject2D::Create();					
 		m_pReturnObj->SetSize(D3DXVECTOR3(300.0f, 100.0f, 0.0f));
 		m_pReturnObj->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y - m_pReturnObj->GetSize().y - 20.0f, 0.0f));
-		m_pReturnObj->LoadTex(-1);
+		m_pReturnObj->LoadTex(7);
 		m_pReturnObj->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 		m_pReturnObj->SetObjType(CObject::OBJTYPE_PAUSE);
 
@@ -204,7 +204,7 @@ void CPause::SetPause(const bool bPause, const bool bSelect)
 		m_pNewGameObj = CObject2D::Create();
 		m_pNewGameObj->SetPos(m_pos);
 		m_pNewGameObj->SetSize(D3DXVECTOR3(400.0f, 100.0f, 0.0f));
-		m_pNewGameObj->LoadTex(-1);
+		m_pNewGameObj->LoadTex(9);
 		m_pNewGameObj->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 		m_pNewGameObj->SetObjType(CObject::OBJTYPE_PAUSE);
 
@@ -212,7 +212,7 @@ void CPause::SetPause(const bool bPause, const bool bSelect)
 		m_pTitleObj = CObject2D::Create();
 		m_pTitleObj->SetSize(D3DXVECTOR3(300.0f, 100.0f, 0.0f));
 		m_pTitleObj->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y + m_pTitleObj->GetSize().y + 20.0f, 0.0f));
-		m_pTitleObj->LoadTex(-1);
+		m_pTitleObj->LoadTex(6);
 		m_pTitleObj->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 		m_pTitleObj->SetObjType(CObject::OBJTYPE_PAUSE);
 	}

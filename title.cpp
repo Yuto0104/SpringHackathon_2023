@@ -17,6 +17,7 @@
 #include "keyboard.h"
 #include "object2D.h"
 #include "sound.h"
+#include "bg.h"
 
 //=============================================================================
 // コンストラクタ
@@ -26,7 +27,6 @@
 CTitle::CTitle() : m_nextMode(MODE_GAME),	// 次に設定するモード
 m_pTitleLogo(nullptr),						// タイトルロゴオブジェクト
 m_pNewGame(nullptr),						// ニューゲームオブジェクト
-m_pTutorial(nullptr),						// チュートリアルオブジェクト
 m_pExit(nullptr),							// 終了オブジェクト
 m_fAddAlpha(0.0f),							// フレーム数のカウント
 m_nCntFrame(0),								// フレームカウント
@@ -56,29 +56,27 @@ HRESULT CTitle::Init()
 	CSound *pSound = CApplication::GetSound();
 	//pSound->PlaySound(CSound::SOUND_LABEL_BGM000);
 
+	CBG *pBG = CBG::Create();
+	pBG->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	pBG->LoadTex(17);
+
 	m_pTitleLogo = CObject2D::Create();
 	m_pTitleLogo->SetPos(D3DXVECTOR3(640.0f, 280.0f, 0.0f));
 	m_pTitleLogo->SetSize(D3DXVECTOR3(640.0f, 200.0f, 0.0f));
 	m_pTitleLogo->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-	m_pTitleLogo->LoadTex(-1);
+	m_pTitleLogo->LoadTex(5);
 
 	m_pNewGame = CObject2D::Create();
-	m_pNewGame->SetPos(D3DXVECTOR3(640.0f, 550.0f, 0.0f));
+	m_pNewGame->SetPos(D3DXVECTOR3(640.0f, 560.0f, 0.0f));
 	m_pNewGame->SetSize(D3DXVECTOR3(300.0f, 60.0f, 0.0f));
 	m_pNewGame->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-	m_pNewGame->LoadTex(-1);
-
-	m_pTutorial = CObject2D::Create();
-	m_pTutorial->SetPos(D3DXVECTOR3(640.0f, 610.0f, 0.0f));
-	m_pTutorial->SetSize(D3DXVECTOR3(280.0f, 50.0f, 0.0f));
-	m_pTutorial->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-	m_pTutorial->LoadTex(-1);
+	m_pNewGame->LoadTex(9);
 
 	m_pExit = CObject2D::Create();
-	m_pExit->SetPos(D3DXVECTOR3(640.0f, 670.0f, 0.0f));
+	m_pExit->SetPos(D3DXVECTOR3(640.0f, 630.0f, 0.0f));
 	m_pExit->SetSize(D3DXVECTOR3(170.0f, 50.0f, 0.0f));
 	m_pExit->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-	m_pExit->LoadTex(-1);
+	m_pExit->LoadTex(10);
 
 	return S_OK;
 }
@@ -136,10 +134,6 @@ void CTitle::Update()
 			CApplication::SetNextMode(CApplication::MODE_GAME);
 			break;
 
-		case MODE_TUTORIAL:
-			CApplication::SetNextMode(CApplication::MODE_TUTORIAL);
-			break;
-
 		case MODE_EXIT:
 			// ウィンドウを破棄
 			DestroyWindow(CApplication::GetWnd());
@@ -185,19 +179,11 @@ void CTitle::FlashObj()
 	{
 	case MODE_GAME:
 		pObj = m_pNewGame;
-		m_pTutorial->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-		m_pExit->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-		break;
-
-	case MODE_TUTORIAL:
-		pObj = m_pTutorial;
-		m_pNewGame->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 		m_pExit->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 		break;
 
 	case MODE_EXIT:
 		pObj = m_pExit;
-		m_pTutorial->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 		m_pNewGame->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 		break;
 

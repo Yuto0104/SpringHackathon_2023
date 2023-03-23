@@ -75,14 +75,13 @@ HRESULT CBullet3D::Init()
 	// 初期化
 	CObject3D::Init();
 
-	// テクスチャの設定
-	LoadTex(0);
-
 	// ビルボードオン
 	SetBillboard(true);
 
 	// 攻撃
 	m_nAttack = 20;
+
+	LoadTex(15);
 
 	return S_OK;
 }

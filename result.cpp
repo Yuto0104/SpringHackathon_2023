@@ -17,6 +17,7 @@
 #include "score.h"
 #include "ranking.h"
 #include "sound.h"
+#include "bg.h"
 
 //=============================================================================
 // コンストラクタ
@@ -63,13 +64,13 @@ HRESULT CResult::Init()
 	m_pTitleObj->SetPos(D3DXVECTOR3(340.0f, 650.0f, 0.0f));
 	m_pTitleObj->SetSize(D3DXVECTOR3(300.0f, 100.0f, 0.0f));
 	m_pTitleObj->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-	m_pTitleObj->LoadTex(-1);
+	m_pTitleObj->LoadTex(6);
 
 	m_pGameObj = CObject2D::Create();
 	m_pGameObj->SetPos(D3DXVECTOR3(940.0f, 650.0f, 0.0f));
 	m_pGameObj->SetSize(D3DXVECTOR3(320.0f, 100.0f, 0.0f));
 	m_pGameObj->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-	m_pGameObj->LoadTex(-1);
+	m_pGameObj->LoadTex(9);
 
 	m_pScore = CScore::Create(10, false);
 	m_pScore->SetDestScore(CApplication::GetScore());
@@ -81,6 +82,10 @@ HRESULT CResult::Init()
 	m_pRanking = CRanking::Create(5, CApplication::GetScore());
 	m_pRanking->SetPos(D3DXVECTOR3(660.0f, 280.0f, 0.0f));
 	m_pRanking->SetWholeSize(D3DXVECTOR3(500.0f, 300.0f, 0.0f));
+
+	CBG *pBG = CBG::Create();
+	pBG->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	pBG->LoadTex(17);
 
 	return S_OK;
 }

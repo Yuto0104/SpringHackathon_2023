@@ -49,6 +49,7 @@ private:
 	int m_nLife;														//体力
 	int m_nBulletCreateTime;
 
+	bool m_bTex;				
 	bool m_SkillFlag;														//スキルのフラグ
 };
 

@@ -55,6 +55,7 @@ private:
 	CCollision_Rectangle3D *m_pCollisionRectangle3D;        // 3D‹éŒ`‚Ì“–‚½‚è”»’è
 	D3DXVECTOR3				m_move;							// ˆÚ“®—Ê
 	int						m_nLife;						// ‘Ì—Í
+	bool					m_bTex;
 };
 
 #endif

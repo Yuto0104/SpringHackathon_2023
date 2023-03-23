@@ -136,7 +136,7 @@ void CSelectItem::Update()
 		{
 			m_nCntFrame++;
 
-			if (m_nCntFrame % 150 == 0)
+			if (m_nCntFrame % 60 == 0)
 			{
 				m_nCntFrame = 0;
 				m_pLille->Uninit();
@@ -224,7 +224,7 @@ void CSelectItem::SetPause(const bool bPause, const bool bSelect)
 		m_pSlotObj = CObject2D::Create();
 		m_pSlotObj->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y + 100.0f, m_pos.z));
 		m_pSlotObj->SetSize(D3DXVECTOR3(300.0f, 150.0f, 0.0f));
-		m_pSlotObj->LoadTex(-1);
+		m_pSlotObj->LoadTex(13);
 		m_pSlotObj->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 		m_pSlotObj->SetObjType(CObject::OBJTYPE_SELECT_ITEM);
 
@@ -232,7 +232,7 @@ void CSelectItem::SetPause(const bool bPause, const bool bSelect)
 		m_pItemObj = CObject2D::Create();
 		m_pItemObj->SetPos(D3DXVECTOR3(m_pos.x,m_pos.y - 100.0f,m_pos.z));
 		m_pItemObj->SetSize(D3DXVECTOR3(300.0f, 150.0f, 0.0f));
-		m_pItemObj->LoadTex(-1);
+		m_pItemObj->LoadTex(12);
 		m_pItemObj->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 		m_pItemObj->SetObjType(CObject::OBJTYPE_SELECT_ITEM);
 	}
