@@ -140,7 +140,6 @@ void CLille::Update()
 	{
 		if (m_nNumber == m_nNumDest)
 		{// “–‚½‚è
-			int a = 0;
 			CPlayer * pPlayer = nullptr;
 			pPlayer = CGame::GetPlayer();
 
