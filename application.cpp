@@ -179,17 +179,17 @@ void CApplication::SetMode(SCENE_MODE mode)
 	{
 	case CApplication::MODE_TITLE:
 		pSceneMode = new CTitle;
-		m_pSound->Play(CSound::SOUND_LABEL_BGM_TITLE);
+		m_pSound->Play(CSound::SOUND_LABEL_BGM_BGM000);
 		break;
 
 	case CApplication::MODE_GAME:
 		pSceneMode = new CGame;
-		m_pSound->Play(CSound::SOUND_LABEL_BGM_GAME);
+		m_pSound->Play(CSound::SOUND_LABEL_BGM_BGM001);
 		break;
 
 	case CApplication::MODE_RESULT:
 		pSceneMode = new CResult;
-		m_pSound->Play(CSound::SOUND_LABEL_BGM_RESULT);
+		m_pSound->Play(CSound::SOUND_LABEL_BGM_BGM002);
 		break;
 
 	case CApplication::MODE_TUTORIAL:

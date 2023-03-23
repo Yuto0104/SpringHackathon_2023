@@ -80,9 +80,8 @@ HRESULT CGame::Init()
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CApplication::GetRenderer()->GetDevice();
 
-	// サウンド情報の取得
-	CSound *pSound = CApplication::GetSound();
-	//pSound->PlaySound(CSound::SOUND_LABEL_BGM000);
+	//SE
+	CApplication::GetSound()->Play(CSound::SOUND_LABEL_BGM_BGM001);
 
 	// 重力の値を設定
 	CCalculation::SetGravity(0.2f);

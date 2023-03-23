@@ -52,10 +52,8 @@ CResult::~CResult()
 //=============================================================================
 HRESULT CResult::Init()
 {
-	// サウンド情報の取得
-	CSound *pSound = CApplication::GetSound();
-	//pSound->PlaySound(CSound::SOUND_LABEL_BGM002);
-
+	//SE
+	CApplication::GetSound()->Play(CSound::SOUND_LABEL_BGM_BGM002);
 	// 次に行くモードの設定
 	m_nextMode = CApplication::MODE_TITLE;
 
