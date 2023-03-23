@@ -27,6 +27,7 @@
 #include "mesh.h"
 #include "sound.h"
 #include "player.h"
+#include "mine.h"
 
 //*****************************************************************************
 // 静的メンバ変数宣言
@@ -117,7 +118,7 @@ HRESULT CGame::Init()
 	//pMesh->SetScrollTex(move, bScrollTex);
 	//pMesh->SetUseCollison(bCollison);
 
-	
+	CMine::Create(D3DXVECTOR3(100.0f, 0.0f, 100.0f), D3DXVECTOR3(200.0f, 200.0f, 0.0f));
 
 	// エネミー
 	m_pEnemy = CEnemy::Create(D3DXVECTOR3(100.0f,0.0f,100.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f));

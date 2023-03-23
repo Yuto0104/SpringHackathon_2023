@@ -1,6 +1,6 @@
 //=============================================================================
 //
-// エネミークラス(enemy.h)
+// 地雷クラス(skill.h)
 // Author : 髙野馨將
 // 概要 : オブジェクト生成を行う
 //
@@ -11,7 +11,7 @@
 //*****************************************************************************
 #include <assert.h>
 
-#include "enemy.h"
+#include "mine.h"
 #include "collision_rectangle3D.h"
 #include "renderer.h"
 #include "game.h"
@@ -21,26 +21,26 @@
 //=============================================================================
 // インスタンス生成
 // Author : 髙野馨將
-// 概要 : エネミーを生成する
+// 概要 : 地雷を生成する
 //=============================================================================
-CEnemy * CEnemy::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size)
+CMine * CMine::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 {
 	// オブジェクトインスタンス
-	CEnemy *pEnemy = nullptr;
-
+	CMine *pMine = nullptr;
+	
 	// メモリの解放
-	pEnemy = new CEnemy;
-
+	pMine = new CMine;
 	// メモリの確保ができなかった
-	assert(pEnemy != nullptr);
+	assert(pMine != nullptr);
 
 	// エネミーの初期化
-	pEnemy->Init();
-	pEnemy->SetPos(pos);
-	pEnemy->SetSize(size);
+	pMine->Init();
+	pMine->SetPos(pos);
+	pMine->SetSize(size);
+	pMine->m_pCollisionRectangle3D->SetSize(D3DXVECTOR3(size.x * 2.0f, size.y * 2.0f, 10.0f));
 
 	// インスタンスを返す
-	return pEnemy;
+	return pMine;
 }
 
 //=============================================================================
@@ -48,10 +48,9 @@ CEnemy * CEnemy::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 // Author : 髙野馨將
 // 概要 : インスタンス生成時に行う処理
 //=============================================================================
-CEnemy::CEnemy()
+CMine::CMine()
 {
-	// タイプの付与
-	SetObjType(OBJETYPE_ENEMY);
+
 }
 
 //=============================================================================
@@ -59,7 +58,7 @@ CEnemy::CEnemy()
 // Author : 髙野馨將
 // 概要 : インスタンス終了時に行う処理
 //=============================================================================
-CEnemy::~CEnemy()
+CMine::~CMine()
 {
 
 }
@@ -69,15 +68,9 @@ CEnemy::~CEnemy()
 // Author : 髙野馨將
 // 概要 : 初期化
 //=============================================================================
-HRESULT CEnemy::Init()
+HRESULT CMine::Init()
 {// 初期化処理
-	CObject3D::Init();
-
-	// 3D矩形の当たり判定の設定
-	m_pCollisionRectangle3D = CCollision_Rectangle3D::Create();
-	m_pCollisionRectangle3D->SetParent(this);
-	m_pCollisionRectangle3D->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pCollisionRectangle3D->SetSize(D3DXVECTOR3(45.0f, 45.0f, 20.0f));
+	CSkill::Init();
 
 	return S_OK;
 }
@@ -85,57 +78,33 @@ HRESULT CEnemy::Init()
 //=============================================================================
 // 終了
 // Author : 髙野馨將
-// 概要 : エネミーの解放
+// 概要 : 地雷の解放
 //=============================================================================
-void CEnemy::Uninit()
+void CMine::Uninit()
 {
 	// 終了処理
-	CObject3D::Uninit();
+	CSkill::Uninit();
 
-	if (m_pCollisionRectangle3D != nullptr)
-	{// 3D矩形の当たり判定の終了処理
-		m_pCollisionRectangle3D->Uninit();
-		m_pCollisionRectangle3D = nullptr;
-	}
-
-	// エネミーの解放
+	// 地雷の解放
 	Release();
 }
 
 //=============================================================================
 // 更新
 // Author : 髙野馨將
-// 概要 : エネミー更新を行う
+// 概要 : 地雷更新を行う
 //=============================================================================
-void CEnemy::Update()
+void CMine::Update()
 {// 更新処理
-	// 情報の取得
-	CPlayer *pPlayer = CGame::GetPlayer();
-	D3DXVECTOR3 pos = GetPos();
-	D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
 
-	// 追尾
-	float fRot = sqrtf((float)(pow(PlayerPos.x - pos.x, 2) + pow(PlayerPos.y - pos.y, 2)));
-	m_move.x = (PlayerPos.x - pos.x) / (fRot / 1.0f);
-	m_move.y = (PlayerPos.y - pos.y) / (fRot / 1.0f);
-
-	//前回位置の保存
-	SetPosOld(pos);
-
-	// 位置の更新
-	pos += m_move;
-	SetPos(pos);
-
-	// 当たり判定
-	m_pCollisionRectangle3D->Collision(CObject::OBJETYPE_PLAYER, true);
 }
 
 //=============================================================================
 // 描画
 // Author : 髙野馨將
-// 概要 : エネミー描画を行う
+// 概要 : 地雷描画を行う
 //=============================================================================
-void CEnemy::Draw()
+void CMine::Draw()
 {// 描画処理
-	CObject3D::Draw();
+	CSkill::Draw();
 }
