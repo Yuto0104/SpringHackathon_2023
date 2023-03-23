@@ -23,7 +23,7 @@
 // Author : 髙野馨將
 // 概要 : エネミーを生成する
 //=============================================================================
-CEnemy * CEnemy::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size)
+CEnemy * CEnemy::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, int nLife)
 {
 	// オブジェクトインスタンス
 	CEnemy *pEnemy = nullptr;
@@ -38,6 +38,7 @@ CEnemy * CEnemy::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 	pEnemy->Init();
 	pEnemy->SetPos(pos);
 	pEnemy->SetSize(size);
+	pEnemy->m_nLife = nLife;
 
 	// インスタンスを返す
 	return pEnemy;
@@ -72,12 +73,13 @@ CEnemy::~CEnemy()
 HRESULT CEnemy::Init()
 {// 初期化処理
 	CObject3D::Init();
+	m_nLife = 0;
 
 	// 3D矩形の当たり判定の設定
 	m_pCollisionRectangle3D = CCollision_Rectangle3D::Create();
 	m_pCollisionRectangle3D->SetParent(this);
 	m_pCollisionRectangle3D->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pCollisionRectangle3D->SetSize(D3DXVECTOR3(45.0f, 45.0f, 20.0f));
+	m_pCollisionRectangle3D->SetSize(D3DXVECTOR3(45.0f, 45.0f, 10.0f));
 
 	return S_OK;
 }
@@ -112,12 +114,15 @@ void CEnemy::Update()
 	// 情報の取得
 	CPlayer *pPlayer = CGame::GetPlayer();
 	D3DXVECTOR3 pos = GetPos();
-	D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
+	if (pPlayer != nullptr)
+	{
+		D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
 
-	// 追尾
-	float fRot = sqrtf((float)(pow(PlayerPos.x - pos.x, 2) + pow(PlayerPos.y - pos.y, 2)));
-	m_move.x = (PlayerPos.x - pos.x) / (fRot / 1.0f);
-	m_move.y = (PlayerPos.y - pos.y) / (fRot / 1.0f);
+		// 追尾
+		float fRot = sqrtf((float)(pow(PlayerPos.x - pos.x, 2) + pow(PlayerPos.y - pos.y, 2)));
+		m_move.x = (PlayerPos.x - pos.x) / (fRot / 1.0f);
+		m_move.y = (PlayerPos.y - pos.y) / (fRot / 1.0f);
+	}
 
 	//前回位置の保存
 	SetPosOld(pos);
@@ -128,6 +133,16 @@ void CEnemy::Update()
 
 	// 当たり判定
 	m_pCollisionRectangle3D->Collision(CObject::OBJETYPE_PLAYER, true);
+
+	// ライフが0より小さくなったら
+	if (m_nLife <= 0)
+	{// リザルトに行く
+		CApplication::SetNextMode(CApplication::MODE_RESULT);
+		// 終了処理
+		Uninit();
+
+		return;
+	}
 }
 
 //=============================================================================
