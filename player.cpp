@@ -164,14 +164,13 @@ void CPlayer::Draw(void)
 }
 
 //生成処理
-CPlayer* CPlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const int nLife)
+CPlayer* CPlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size)
 {
 	CPlayer* pPlayer = new CPlayer;		//インスタンスを生成する
 
 	pPlayer->Init();
 	pPlayer->SetPos(pos);
 	pPlayer->SetSize(size);
-	pPlayer->m_nLife = nLife;
 
 	//生成したインスタンスを返す
 	return pPlayer;
