@@ -28,6 +28,7 @@
 #include "sound.h"
 #include "player.h"
 #include "mine.h"
+#include "pause.h"
 
 //*****************************************************************************
 // 静的メンバ変数宣言
@@ -192,15 +193,28 @@ void CGame::Update()
 	// キーボードの取得
 	CKeyboard *pKeyboard = CApplication::GetKeyboard();
 	CCamera *pCamera = CApplication::GetCamera();
+	CPause *pPause = CApplication::GetPause();
 
 	if (pKeyboard->GetPress(DIK_LSHIFT))
 	{
 		pCamera->Zoom();
 	}
 
+	if (!pPause->GetPause()
+		&& pKeyboard->GetTrigger(DIK_P))
+	{
+		pPause->SetPause(true, true);
+	}
+	else if (pPause->GetPause()
+		&& pKeyboard->GetTrigger(DIK_P))
+	{
+		pPause->SetPause(false, false);
+	}
+
 	if (pKeyboard->GetTrigger(DIK_H))
 	{
-		CApplication::SetNextMode(CApplication::MODE_SELECTITEM);
+		pPause->SetPause(true);
+		//CApplication::SetNextMode(CApplication::MODE_SELECTITEM);
 	}
 
 	if (!m_bGame)

@@ -175,13 +175,15 @@ void CPause::SetColor(const D3DXCOLOR & col)
 // Author : 唐﨑結斗
 // 概要 : ポーズの設定を行う
 //=============================================================================
-void CPause::SetPause(const bool bPause)
+void CPause::SetPause(const bool bPause, const bool bSelect)
 {
 	m_bPause = bPause;
-	m_bSelect = true;
+	CSuper::SetPause(m_bPause);
 
 	if (m_bPause)
 	{
+		m_bSelect = true;
+
 		// ポーズ背景オブジェクト
 		m_pPauseBGObj = CObject2D::Create();
 		m_pPauseBGObj->SetSize(m_size);
@@ -216,17 +218,22 @@ void CPause::SetPause(const bool bPause)
 	}
 	else
 	{
-		// ポーズ背景オブジェクト
-		m_pPauseBGObj->Uninit();
+		if (m_bSelect)
+		{
+			m_bSelect = false;
 
-		// リターンオブジェクト
-		m_pReturnObj->Uninit();
+			// ポーズ背景オブジェクト
+			m_pPauseBGObj->Uninit();
 
-		// ニューゲームオブジェクト
-		m_pNewGameObj->Uninit();
+			// リターンオブジェクト
+			m_pReturnObj->Uninit();
 
-		// タイトルオブジェクト
-		m_pTitleObj->Uninit();
+			// ニューゲームオブジェクト
+			m_pNewGameObj->Uninit();
+
+			// タイトルオブジェクト
+			m_pTitleObj->Uninit();
+		}
 	}
 }
 
@@ -235,9 +242,10 @@ void CPause::SetPause(const bool bPause)
 // Author : 唐﨑結斗
 // 概要 : ポーズの設定を行う
 //=============================================================================
-void CPause::SetPause()
+void CPause::SetPause(const bool bPause)
 {
-	m_bPause = true;
+	m_bPause = bPause;
+	CSuper::SetPause(m_bPause);
 	m_bSelect = false;
 }
 
@@ -365,16 +373,16 @@ void CPause::Select()
 			switch (m_nextMode)
 			{
 			case MODE_RETURN:
-				SetPause(false);
+				SetPause(false, false);
 				break;
 
 			case MODE_GAME:
-				SetPause(false);
+				SetPause(false, false);
 				CApplication::SetNextMode(CApplication::MODE_GAME);
 				break;
 
 			case MODE_TITLE:
-				SetPause(false);
+				SetPause(false, false);
 				CApplication::SetNextMode(CApplication::MODE_TITLE);
 				break;
 
@@ -383,18 +391,6 @@ void CPause::Select()
 				break;
 			}
 		}
-
-		if (pKeyboard->GetTrigger(DIK_P))
-		{
-			SetPause(false);
-		}
-
-	}
-	else if (!m_bPause
-		&& pKeyboard->GetTrigger(DIK_P))
-	{
-		SetPause(true);
-		//pSound->PlaySound(CSound::SOUND_LABEL_SE_PAUSE);
 	}
 }
 

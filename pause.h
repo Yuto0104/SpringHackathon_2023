@@ -63,8 +63,8 @@ public:
 	void SetRot(const D3DXVECTOR3 &rot) override;									// 向きのセッター
 	void SetSize(const D3DXVECTOR3 &size) override;									// 大きさのセッター
 	void SetColor(const D3DXCOLOR &col);											// 色の設定
+	void SetPause(const bool bPause, const bool bSelect);							// ポーズの使用状況
 	void SetPause(const bool bPause);												// ポーズの使用状況
-	void SetPause();																// ポーズの使用状況
 	D3DXVECTOR3 GetPos() override { return m_pos; }									// 位置のゲッター
 	D3DXVECTOR3 GetPosOld()  override { return m_posOld; }							// 過去位置のゲッター
 	D3DXVECTOR3 GetRot()  override { return m_rot; }								// 向きのゲッター
