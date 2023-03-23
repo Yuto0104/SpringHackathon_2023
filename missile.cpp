@@ -19,6 +19,7 @@
 #include "enemy.h"
 #include "application.h"
 #include "bullet.h"
+#include "sound.h"
 
 //=============================================================================
 // インスタンス生成
@@ -119,6 +120,8 @@ void CMissile::Update()
 			if (m_nNormalTime <= 0)
 			{
 				m_pBullet = CBullet::Create(PlayerPos, -m_BulletMove, D3DXVECTOR3(5.0f, 5.0f, 0.0f), 100, CBullet::BulletType_Normal);
+				//SE
+				CApplication::GetSound()->Play(CSound::SOUND_LABEL_SE_ATTACK);
 			}
 			if (m_nNormalTime <= 0)
 			{

@@ -179,7 +179,7 @@ void CGame::Uninit()
 	CSound *pSound = CApplication::GetSound();
 
 	// サウンド終了
-	pSound->StopSound();
+	pSound->Stop();
 
 	CCamera *pCamera = CApplication::GetCamera();
 	pCamera->SetFollowTarget(false);

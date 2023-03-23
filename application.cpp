@@ -170,22 +170,31 @@ void CApplication::SetMode(SCENE_MODE mode)
 
 	m_mode = mode;
 
+	if (m_pSound != nullptr && m_mode != MODE_TUTORIAL)
+	{// 使用中のサウンド停止
+		m_pSound->Stop();
+	}
+
 	switch (m_mode)
 	{
 	case CApplication::MODE_TITLE:
 		pSceneMode = new CTitle;
+		m_pSound->Play(CSound::SOUND_LABEL_BGM_TITLE);
 		break;
 
 	case CApplication::MODE_GAME:
 		pSceneMode = new CGame;
+		m_pSound->Play(CSound::SOUND_LABEL_BGM_GAME);
 		break;
 
 	case CApplication::MODE_RESULT:
 		pSceneMode = new CResult;
+		m_pSound->Play(CSound::SOUND_LABEL_BGM_RESULT);
 		break;
 
 	case CApplication::MODE_TUTORIAL:
 		pSceneMode = new CTutorial;
+		m_pSound->Play(CSound::SOUND_LABEL_BGM_TUTORIAL);
 		break;
 
 	default:
