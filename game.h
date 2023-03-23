@@ -18,6 +18,7 @@
 //*****************************************************************************
 class CScore;
 class CTime;
+class CEnemy;
 
 //=============================================================================
 // ゲームクラス
@@ -32,6 +33,7 @@ public:
 	//--------------------------------------------------------------------
 	static CScore *GetScore() { return m_pScore; }					// スコア
 	static CTime *GetTime() { return m_pTime; }						// タイム
+	static CEnemy *GetEnemy() { return m_pEnemy; }					// エネミー
 	static void SetGame(const bool bGame) { m_bGame = bGame; }		// ゲームの状況の設定
 
 	//--------------------------------------------------------------------
@@ -45,6 +47,7 @@ public:
 	//--------------------------------------------------------------------
 	static CScore *m_pScore;						// スコア
 	static CTime *m_pTime;							// タイム
+	static CEnemy *m_pEnemy;						// エネミー
 	static D3DXCOLOR fogColor;						// フォグカラー
 	static float fFogStartPos;						// フォグの開始点
 	static float fFogEndPos;						// フォグの終了点

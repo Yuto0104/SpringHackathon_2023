@@ -208,7 +208,10 @@
       <Filter>ソース ファイル\Utility</Filter>
     </ClCompile>
     <ClCompile Include="player.cpp">
+    <ClCompile Include="enemy.cpp">
       <Filter>ソース ファイル\Object\3D</Filter>
+      <Filter>ソース ファイル\Object\3D</Filter>
+    </ClCompile>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -345,7 +348,10 @@
       <Filter>ヘッダー ファイル\Utility</Filter>
     </ClInclude>
     <ClInclude Include="player.h">
+    <ClInclude Include="enemy.h">
       <Filter>ヘッダー ファイル\Object\3D</Filter>
+      <Filter>ヘッダー ファイル\Object\3D</Filter>
+    </ClInclude>
     </ClInclude>
   </ItemGroup>
 </Project>

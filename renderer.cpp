@@ -15,7 +15,9 @@
 #include "renderer.h"
 #include "super.h"
 #include "application.h"
+#include "camera.h"
 #include "debug_proc.h"
+#include "collision.h"
 
 //=============================================================================
 // コンストラクタ
@@ -154,6 +156,9 @@ void CRenderer::Update()
 {
 	// 更新処理
 	CSuper::UpdateAll();
+
+	// 当たり判定の更新
+	CCollision::UpdateAll();
 }
 
 //=============================================================================
@@ -181,6 +186,9 @@ void CRenderer::Draw()
 
 		// 描画処理
 		CSuper::DrawAll();
+
+		// 当たり判定の描画
+		CCollision::DrawAll();
 
 #ifdef _DEBUG
 		// デバック表示
