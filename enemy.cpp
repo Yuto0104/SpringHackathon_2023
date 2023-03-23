@@ -20,7 +20,7 @@
 // Author : 髙野馨將
 // 概要 : エネミーを生成する
 //=============================================================================
-CEnemy * CEnemy::Create(D3DXVECTOR3 pos)
+CEnemy * CEnemy::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 {
 	// オブジェクトインスタンス
 	CEnemy *pEnemy = nullptr;
@@ -34,6 +34,7 @@ CEnemy * CEnemy::Create(D3DXVECTOR3 pos)
 	// エネミーの初期化
 	pEnemy->Init();
 	pEnemy->SetPos(pos);
+	pEnemy->SetSize(size);
 
 	// インスタンスを返す
 	return pEnemy;
@@ -99,7 +100,7 @@ void CEnemy::Update()
 //=============================================================================
 // 描画
 // Author : 唐﨑結斗
-// 概要 : 2D描画を行う
+// 概要 : エネミー描画を行う
 //=============================================================================
 void CEnemy::Draw()
 {// 描画処理
