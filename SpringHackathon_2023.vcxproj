@@ -160,6 +160,7 @@
     <ClCompile Include="collision_rectangle3D.cpp" />
     <ClCompile Include="collision_sphere.cpp" />
     <ClCompile Include="debug_proc.cpp" />
+    <ClCompile Include="enemy.cpp" />
     <ClCompile Include="fade.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="input.cpp" />
@@ -183,6 +184,7 @@
     <ClCompile Include="orbit.cpp" />
     <ClCompile Include="parts.cpp" />
     <ClCompile Include="pause.cpp" />
+    <ClCompile Include="player.cpp" />
     <ClCompile Include="ranking.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="result.cpp" />
@@ -206,6 +208,7 @@
     <ClInclude Include="collision_rectangle3D.h" />
     <ClInclude Include="collision_sphere.h" />
     <ClInclude Include="debug_proc.h" />
+    <ClInclude Include="enemy.h" />
     <ClInclude Include="fade.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="input.h" />
@@ -229,6 +232,7 @@
     <ClInclude Include="orbit.h" />
     <ClInclude Include="parts.h" />
     <ClInclude Include="pause.h" />
+    <ClInclude Include="player.h" />
     <ClInclude Include="ranking.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="result.h" />
