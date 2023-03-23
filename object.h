@@ -35,6 +35,7 @@ public:
 		OBJETYPE_ENEMY,				// エネミー
 		OBJTYPE_3DMODEL,			// 3Dモデル
 		OBJETYPE_MESH,				// メッシュ
+		OBJTYPE_3DBULLET,			// 弾
 		OBJETYPE_MINE,				// 地雷
 		MAX_OBJTYPE,				// 種別の最大数
 	};
