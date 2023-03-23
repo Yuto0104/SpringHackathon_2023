@@ -31,6 +31,7 @@
 #include "pause.h"
 #include "calculation.h"
 #include "select_item.h"
+#include "lille.h"
 
 //*****************************************************************************
 // 静的メンバ変数宣言
@@ -39,6 +40,7 @@ CScore *CGame::m_pScore = nullptr;						// スコアインスタンス
 CTime *CGame::m_pTime = nullptr;						// タイム
 CEnemy *CGame::m_pEnemy = nullptr;						// エネミー
 CPlayer *CGame::m_pPlayer = nullptr;					// プレイヤー
+CLille *CGame::m_pLille = nullptr;						// リール
 D3DXCOLOR CGame::fogColor;								// フォグカラー
 float CGame::fFogStartPos;								// フォグの開始点
 float CGame::fFogEndPos;								// フォグの終了点
@@ -110,14 +112,12 @@ HRESULT CGame::Init()
 	// メッシュの設置
 	CMesh3D *pMesh = CMesh3D::Create();
 	assert(pMesh != nullptr);
-	// 数値の設定
 	pMesh->SetPos(D3DXVECTOR3(0.0f, 0.0f, 1000.0f));
 	pMesh->SetRot(D3DXVECTOR3(D3DX_PI * -0.5f, 0.0f, 0.0f));
 	pMesh->SetSize(D3DXVECTOR3(10000.0f, 0.0f, 10000.0f));
-	pMesh->SetCol(D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
-	//pMesh->LoadTex(nType);
-	//pMesh->SetBlock(block);
-	//pMesh->SetSplitTex(bSplitTex);
+	pMesh->LoadTex(2);
+	pMesh->SetBlock(CMesh3D::DOUBLE_INT(30, 30));
+	pMesh->SetSplitTex(true);
 	//pMesh->SetScrollTex(move, bScrollTex);
 	//pMesh->SetUseCollison(bCollison);
 
@@ -234,6 +234,19 @@ void CGame::Update()
 	{//一定以上ならスポーンさせて0にする
 		EnemySpawn();
 		m_nSpawnTime = 0;
+	}
+
+	if (m_pLille == nullptr
+		&& pKeyboard->GetTrigger(DIK_W))
+	{
+		m_pLille = CLille::Create();
+		m_pLille->SetLille(D3DXVECTOR3(640.0f, 360.0f, 0.0f), D3DXVECTOR3(300.0f, 400.0f, 0.0f));
+	}
+	else if (m_pLille != nullptr
+		&& pKeyboard->GetTrigger(DIK_W))
+	{
+		m_pLille->StopScroll();
+		m_pLille = nullptr;
 	}
 
 	if (!m_bGame)

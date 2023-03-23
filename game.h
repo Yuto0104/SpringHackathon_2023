@@ -20,6 +20,7 @@ class CScore;
 class CTime;
 class CEnemy;
 class CPlayer;
+class CLille;
 
 //=============================================================================
 // ゲームクラス
@@ -51,6 +52,7 @@ public:
 	static CTime *m_pTime;							// タイム
 	static CEnemy *m_pEnemy;						// エネミー
 	static CPlayer *m_pPlayer;						// プレイヤー
+	static CLille *m_pLille;						// リール
 	static D3DXCOLOR fogColor;						// フォグカラー
 	static float fFogStartPos;						// フォグの開始点
 	static float fFogEndPos;						// フォグの終了点

@@ -9,7 +9,8 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define NORMAL_RATIO (40)
+#define UDATE_FRAME (7)
+#define DIGITS (10)
 
 //*****************************************************************************
 // インクルード
@@ -20,6 +21,7 @@
 #include "renderer.h"
 #include "application.h"
 #include "calculation.h"
+#include "number.h"
 
 //=============================================================================
 // インスタンス生成
@@ -50,7 +52,12 @@ CLille * CLille::Create()
 //=============================================================================
 CLille::CLille(int nPriority) : CObject2D(nPriority)
 {
-	
+	m_pNumDest = nullptr;		// 目標の番号
+	m_pNumber = nullptr;		// 番号
+	m_nNumDest = 0;				// 目標の番号
+	m_nNumber = 0;				// 目標の番号
+	m_nCntFrame = 0;			// フレームカウント
+	bool m_bScroll = true;		// スクロール
 }
 
 //=============================================================================
@@ -70,17 +77,24 @@ CLille::~CLille()
 //=============================================================================
 HRESULT CLille::Init()
 {
-	// オブジェクト2Dの初期化
+	// オブジェクト2Dの終了
 	CObject2D::Init();
 
-	// テクスチャの設定
-	LoadTex(0);
+	// スクロールを行う
+	m_bScroll = true;		
 
-	// テクスチャ座標の設定
-	SetTex(D3DXVECTOR2(0.0f, 0.0f), D3DXVECTOR2(1.0f / 10, 1.0f));
+	// 生成
+	m_pNumDest = CNumber::Create();
+	m_pNumber = CNumber::Create();
 
-	m_nRatio = NORMAL_RATIO;				// 確率の設定
-	m_bScroll = true;						// スクロール
+	// 目標の番号
+	m_nNumDest = CCalculation::Rand(10);
+	m_pNumDest->SetNumber(m_nNumDest);
+	m_pNumDest->SetCol(D3DXCOLOR(1.0f, 1.0f, 0.2f, 1.0f));
+
+	// 現在の番号
+	m_nNumber = CCalculation::Rand(10);
+	m_pNumber->SetNumber(m_nNumber);
 
 	return S_OK;
 }
@@ -91,7 +105,11 @@ HRESULT CLille::Init()
 // 概要 : テクスチャのポインタと頂点バッファの解放
 //=============================================================================
 void CLille::Uninit()
-{// オブジェクト2Dの終了
+{
+	m_pNumDest->Uninit();
+	m_pNumber->Uninit();
+
+	// オブジェクト2Dの終了
 	CObject2D::Uninit();
 }
 
@@ -104,6 +122,25 @@ void CLille::Update()
 {
 	// オブジェクト2Dの更新
 	CObject2D::Update();
+
+	if (m_bScroll)
+	{
+		Scroll();
+	}
+	else if (!m_bScroll)
+	{
+		if (m_nNumber == m_nNumDest)
+		{// 当たり
+		
+		}
+
+		m_nCntFrame++;
+
+		if (m_nCntFrame % 150 == 0)
+		{
+			Uninit();
+		}
+	}
 }
 
 //=============================================================================
@@ -117,21 +154,48 @@ void CLille::Draw()
 }
 
 //=============================================================================
-// 抽選
+// リールの設定
 // Author : 唐﨑結斗
-// 概要 : リールの抽選を行う
+// 概要 : リールの回転を行う
 //=============================================================================
-bool CLille::Lottery()
+void CLille::SetLille(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 {
-	// 結果
-	bool bResult = false;
+	SetPos(pos);
+	SetSize(D3DXVECTOR3(0.0f,0.0f,0.0f));
 
-	if (CCalculation::Rand(100, 1) < m_nRatio)
-	{// 当たった
-		bResult = true;
+	m_pNumDest->SetSize(D3DXVECTOR3(size.x / 2.0f, size.y / 2.0f, 0.0f));
+	m_pNumber->SetSize(D3DXVECTOR3(size.x / 1.5f, size.y / 1.5f, 0.0f));
+
+	m_pNumDest->SetPos(D3DXVECTOR3(pos.x, pos.y - size.y + size.y / 3.0f, 0.0f));
+	m_pNumber->SetPos(D3DXVECTOR3(pos.x, pos.y + size.y - size.y / 1.5f, 0.0f));
+}
+
+//=============================================================================
+// スクロール
+// Author : 唐﨑結斗
+// 概要 : リールの回転を行う
+//=============================================================================
+void CLille::Scroll()
+{
+	m_nCntFrame++;
+
+	if (m_nCntFrame % UDATE_FRAME == 0)
+	{
+		m_pNumber->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+		m_nNumber++;
+
+		if (m_nNumber >= DIGITS)
+		{
+			m_nNumber = 0;
+		}
+
+		if (m_nNumber == m_nNumDest)
+		{
+			m_pNumber->SetCol(D3DXCOLOR(1.0f, 0.2f, 0.2f, 1.0f));
+		}
+
+		m_pNumber->SetNumber(m_nNumber);
 	}
-
-	return bResult;
 }
 
 
