@@ -28,11 +28,13 @@ class CDebugProc;
 class CKeyboard;
 class CMouse;
 class CTexture;
+class CCamera;
 class CSceneMode;
 class CFade;
+class CLight;
+class CSound;
 class CPause;
 class CJoypad;
-class CSound;
 
 //=============================================================================
 // アプリケーションクラス
@@ -65,11 +67,15 @@ public:
 	static CKeyboard *GetKeyboard() { return m_pKeyboard; }								// キーボードのゲッター
 	static CMouse *GetMouse() { return m_pMouse; }										// マウスのゲッター
 	static CTexture *GetTexture() { return m_pTexture; }								// テクスチャのゲッター
+	static CCamera *GetCamera() { return m_pCamera; }									// カメラのゲッター
 	static CFade *GetFade() { return m_pFade; }											// フェードのゲッター
+	static CLight *GetLight() { return m_pLight; }										// ライトの取得
 	static CSound *GetSound() { return m_pSound; }										// サウンドのゲッター
 	static CPause *GetPause() { return m_pPause; }										// ポーズの取得
 	static CSceneMode *GetSceneMode() { return pSceneMode; }							// シーンモードの取得
 	static CJoypad *GetJoy() { return m_pJoy; }											// ジョイパッドのゲッター
+	static D3DXVECTOR3 ScreenCastWorld(const D3DXVECTOR3 &pos);							// ワールド座標をスクリーン座標にキャストする
+	static D3DXVECTOR3 WorldCastScreen(const D3DXVECTOR3 &pos);							// ワールド座標をスクリーン座標にキャストする
 	static void SetNextMode(SCENE_MODE mode) { m_nextMode = mode; }						// 次のモードの設定
 	static void SetMode(SCENE_MODE mode);												// モードの設定
 	static SCENE_MODE GetMode() { return m_mode; }										// モードの取得
@@ -100,10 +106,12 @@ private:
 	static CKeyboard *m_pKeyboard;				// キーボードクラス
 	static CMouse *m_pMouse;					// マウスクラス
 	static CTexture *m_pTexture;				// テクスチャクラス
+	static CCamera *m_pCamera;					// ゲームカメラクラス
 	static SCENE_MODE m_mode;					// 現在のモードの格納
 	static SCENE_MODE m_nextMode;				// 次に設定するモード
 	static CSceneMode *pSceneMode;				// シーンモードを格納
 	static CFade *m_pFade;						// フェードクラス
+	static CLight *m_pLight;					// ライトクラス
 	static CSound *m_pSound;					// サウンドクラス
 	static CPause *m_pPause;					// ポーズクラス
 	static CJoypad *m_pJoy;						// ジョイパッドクラス

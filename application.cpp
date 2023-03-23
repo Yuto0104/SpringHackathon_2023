@@ -21,14 +21,19 @@
 #include "keyboard.h"
 #include "mouse.h"
 #include "texture.h"
+#include "camera.h"
+#include "light.h"
 #include "sound.h"
 #include "object.h"
 #include "object2D.h"
+#include "object3D.h"
+#include "model3D.h"
 #include "scene_mode.h"
 #include "title.h"
 #include "game.h"
 #include "result.h"
 #include "fade.h"
+#include "collision.h"
 #include "pause.h"
 #include "tutorial.h"
 #include "joypad.h"
@@ -42,16 +47,104 @@ CRenderer *CApplication::m_pRenderer = nullptr;						// レンダラーインスタンス
 CKeyboard *CApplication::m_pKeyboard = {};							// キーボードインスタンス
 CMouse *CApplication::m_pMouse = {};								// マウスインスタンス
 CTexture *CApplication::m_pTexture = nullptr;						// テクスチャインスタンス
+CCamera *CApplication::m_pCamera = nullptr;							// カメラインスタンス
 CApplication::SCENE_MODE CApplication::m_mode = MODE_NONE;			// 現在のモードの格納
 CApplication::SCENE_MODE CApplication::m_nextMode = MODE_TITLE;		// 次のモードの格納
 CSceneMode *CApplication::pSceneMode = nullptr;						// シーンモードを格納
 CFade *CApplication::m_pFade = nullptr;								// フェードクラス
+CLight *CApplication::m_pLight = nullptr;							// ライトクラス
 CSound *CApplication::m_pSound = nullptr;							// サウンドクラス
 CPause *CApplication::m_pPause = nullptr;							// ポーズクラス
 CJoypad *CApplication::m_pJoy = nullptr;							// ジョイパッドクラス
 int CApplication::m_nPriority = 0;									// プライオリティ番号
 int CApplication::m_nScore = 0;										// 現在のスコア
 bool CApplication::m_bWireFrame = false;							// ワイヤーフレームを使うか
+
+//=============================================================================
+// スクリーン座標をワールド座標にキャストする
+// Author : 唐﨑結斗
+// 概要 : 
+//=============================================================================
+D3DXVECTOR3 CApplication::ScreenCastWorld(const D3DXVECTOR3 &pos)
+{
+	// 計算用マトリックス
+	D3DXMATRIX mtx, mtxTrans, mtxView, mtxPrj, mtxViewPort;
+
+	// 行列移動関数 (第一引数にX,Y,Z方向の移動行列を作成)
+	D3DXMatrixTranslation(&mtxTrans, pos.x, pos.y, pos.z);
+
+	// カメラのビューマトリックスの取得
+	mtxView = m_pCamera->GetMtxView();
+
+	// カメラのプロジェクションマトリックスの取得
+	mtxPrj = m_pCamera->GetMtxProj();
+
+	// マトリックスの乗算
+	mtx = mtxTrans * mtxView * mtxPrj;
+
+	// ビューポート行列（スクリーン行列）の作成
+	float w = (float)CRenderer::SCREEN_WIDTH / 2.0f;
+	float h = (float)CRenderer::SCREEN_HEIGHT / 2.0f;
+
+	mtxViewPort = {
+		w , 0 , 0 , 0 ,
+		0 ,-h , 0 , 0 ,
+		0 , 0 , 1 , 0 ,
+		w , h , 0 , 1
+	};
+
+	// マトリックスのXYZ
+	D3DXVECTOR3 vec = D3DXVECTOR3(mtx._41, mtx._42, mtx._43);
+
+	D3DXVec3TransformCoord(&vec, &vec, &mtxViewPort);
+
+	return vec;
+}
+
+//=============================================================================
+// ワールド座標をスクリーン座標にキャストする
+// Author : 唐﨑結斗
+// 概要 : 
+//=============================================================================
+D3DXVECTOR3 CApplication::WorldCastScreen(const D3DXVECTOR3 &pos)
+{
+	// 計算用ベクトル
+	D3DXVECTOR3 vec = pos;
+
+	// 計算用マトリックス
+	D3DXMATRIX mtx, mtxTrans, mtxView, mtxPrj, mtxViewPort;
+
+	// 行列移動関数 (第一引数にX,Y,Z方向の移動行列を作成)
+	D3DXMatrixTranslation(&mtxTrans, pos.x, pos.y, pos.z);
+
+	// カメラのビューマトリックスの取得
+	mtxView = m_pCamera->GetMtxView();
+
+	// カメラのプロジェクションマトリックスの取得
+	mtxPrj = m_pCamera->GetMtxProj();
+	
+	// ビューポート行列（スクリーン行列）の作成
+	D3DXMatrixIdentity(&mtxViewPort);
+	float w = (float)CRenderer::SCREEN_WIDTH / 2.0f;
+	float h = (float)CRenderer::SCREEN_HEIGHT / 2.0f;
+	mtxViewPort = {
+		w , 0 , 0 , 0 ,
+		0 ,-h , 0 , 0 ,
+		0 , 0 , 1 , 0 ,
+		w , h , 0 , 1
+	};
+
+	// 逆行列の算出
+	D3DXMatrixInverse(&mtxView, NULL, &mtxView);
+	D3DXMatrixInverse(&mtxPrj, NULL, &mtxPrj);
+	D3DXMatrixInverse(&mtxViewPort, NULL, &mtxViewPort);
+
+	// 逆変換
+	mtx = mtxViewPort * mtxPrj * mtxView;
+	D3DXVec3TransformCoord(&vec, &D3DXVECTOR3(vec.x, vec.y, vec.z), &mtx);
+
+	return vec;
+}
 
 //=============================================================================
 // シーンの設定
@@ -68,6 +161,9 @@ void CApplication::SetMode(SCENE_MODE mode)
 
 	// オブジェクトの解放
 	CSuper::ReleaseAll(false);
+
+	// 当たり判定の終了
+	CCollision::ReleaseAll();
 
 	m_mode = mode;
 
@@ -122,6 +218,7 @@ CApplication::~CApplication()
 	assert(m_pMouse == nullptr);
 	assert(m_pJoy == nullptr);
 	assert(m_pTexture == nullptr);
+	assert(m_pCamera == nullptr); 
 	assert(m_pSound == nullptr);
 }
 
@@ -139,6 +236,7 @@ HRESULT CApplication::Init(HINSTANCE hInstance, HWND hWnd)
 	m_pRenderer = new CRenderer;
 	m_pDebugProc = new CDebugProc;
 	m_pTexture = new CTexture;
+	m_pCamera = new CCamera;
 	m_pSound = new CSound;
 	m_pJoy = new CJoypad;
 
@@ -170,6 +268,11 @@ HRESULT CApplication::Init(HINSTANCE hInstance, HWND hWnd)
 	assert(m_pTexture != nullptr);
 	m_pTexture->Init();
 
+	// 初期化処理
+	assert(m_pCamera != nullptr);
+	m_pCamera->Init();
+	m_pCamera->SetViewType(CCamera::TYPE_CLAIRVOYANCE);
+
 	// 初期化
 	assert(m_pDebugProc != nullptr);
 	m_pDebugProc->Init();
@@ -197,6 +300,13 @@ HRESULT CApplication::Init(HINSTANCE hInstance, HWND hWnd)
 		return E_FAIL;
 	}
 
+	// モデル情報の初期化
+	CModel3D::InitModel();
+
+	// ライトの作成
+	m_pLight = CLight::Create(D3DXVECTOR3(1.0f, -1.0f, 1.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	CLight::Create(D3DXVECTOR3(-1.0f, 1.0f, -1.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+
 	// フェードの設定
 	m_pFade = CFade::Create();
 
@@ -216,6 +326,12 @@ void CApplication::Uninit()
 {
 	// オブジェクトの解放
 	CSuper::ReleaseAll(true);
+
+	// 当たり判定の終了
+	CCollision::ReleaseAll();
+
+	// モデル情報の終了
+	CModel3D::UninitModel();
 
 	if (m_pRenderer != nullptr)
 	{// 終了処理
@@ -262,6 +378,15 @@ void CApplication::Uninit()
 		m_pTexture = nullptr;
 	}
 
+	if (m_pCamera != nullptr)
+	{// 終了処理
+		m_pCamera->Uninit();
+
+		// メモリの解放
+		delete m_pCamera;
+		m_pCamera = nullptr;
+	}
+
 	if (m_pSound != nullptr)
 	{// 終了処理
 		m_pSound->Uninit();
@@ -278,6 +403,9 @@ void CApplication::Uninit()
 		delete m_pJoy;
 		m_pJoy = nullptr;
 	}
+
+	// ライトの解放
+	CLight::ReleaseAll();
 }
 
 //=============================================================================
@@ -296,6 +424,11 @@ void CApplication::Update()
 	m_pKeyboard->Update();
 	m_pMouse->Update();
 	m_pJoy->Update();
+
+	if (!CSuper::GetPause())
+	{
+		m_pCamera->Update();
+	}
 
 	m_pRenderer->Update();
 

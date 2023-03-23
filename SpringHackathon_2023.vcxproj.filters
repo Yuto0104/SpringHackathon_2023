@@ -49,6 +49,30 @@
     <Filter Include="ヘッダー ファイル\Scene">
       <UniqueIdentifier>{dc53cfe6-c445-4769-89cd-c9b7f8a7f736}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Object\2D">
+      <UniqueIdentifier>{a5ee9a1e-049b-4d07-bb67-19a9456f33de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Object\2D">
+      <UniqueIdentifier>{938df53d-5335-4805-be08-3e547dc8c464}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Collision">
+      <UniqueIdentifier>{e6a9da6a-0e44-4bd0-8e91-39a258ac4d7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Object\3D">
+      <UniqueIdentifier>{796d1cf0-3a79-40f0-91bd-23af6d978b96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Model">
+      <UniqueIdentifier>{ed90e868-42bc-481f-8b83-e2f76b98886a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Collision">
+      <UniqueIdentifier>{37040354-e62b-4bf5-adb4-de0979590d6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Model">
+      <UniqueIdentifier>{3cf3b780-6b89-4187-a7f6-952783c2efb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Object\3D">
+      <UniqueIdentifier>{eaf3e652-6853-4a75-a0f2-bd2af65ab922}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="input.cpp">
@@ -117,29 +141,71 @@
     <ClCompile Include="scene_mode.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="bg.cpp">
-      <Filter>ソース ファイル\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="fade.cpp">
-      <Filter>ソース ファイル\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="number.cpp">
-      <Filter>ソース ファイル\Object</Filter>
-    </ClCompile>
     <ClCompile Include="object.cpp">
       <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
+    <ClCompile Include="bg.cpp">
+      <Filter>ソース ファイル\Object\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="fade.cpp">
+      <Filter>ソース ファイル\Object\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="number.cpp">
+      <Filter>ソース ファイル\Object\2D</Filter>
+    </ClCompile>
     <ClCompile Include="object2D.cpp">
-      <Filter>ソース ファイル\Object</Filter>
+      <Filter>ソース ファイル\Object\2D</Filter>
     </ClCompile>
     <ClCompile Include="ranking.cpp">
-      <Filter>ソース ファイル\Object</Filter>
+      <Filter>ソース ファイル\Object\2D</Filter>
     </ClCompile>
     <ClCompile Include="score.cpp">
-      <Filter>ソース ファイル\Object</Filter>
+      <Filter>ソース ファイル\Object\2D</Filter>
     </ClCompile>
     <ClCompile Include="time.cpp">
-      <Filter>ソース ファイル\Object</Filter>
+      <Filter>ソース ファイル\Object\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="collision.cpp">
+      <Filter>ソース ファイル\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="collision_rectangle3D.cpp">
+      <Filter>ソース ファイル\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="collision_sphere.cpp">
+      <Filter>ソース ファイル\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>ソース ファイル\System</Filter>
+    </ClCompile>
+    <ClCompile Include="light.cpp">
+      <Filter>ソース ファイル\System</Filter>
+    </ClCompile>
+    <ClCompile Include="model_obj.cpp">
+      <Filter>ソース ファイル\Object\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_model3D.cpp">
+      <Filter>ソース ファイル\Object\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="object3D.cpp">
+      <Filter>ソース ファイル\Object\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="orbit.cpp">
+      <Filter>ソース ファイル\Object\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="line.cpp">
+      <Filter>ソース ファイル\Object\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh.cpp">
+      <Filter>ソース ファイル\Object\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="model3D.cpp">
+      <Filter>ソース ファイル\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="parts.cpp">
+      <Filter>ソース ファイル\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="motion.cpp">
+      <Filter>ソース ファイル\Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -210,28 +276,70 @@
       <Filter>ヘッダー ファイル\System</Filter>
     </ClInclude>
     <ClInclude Include="time.h">
-      <Filter>ヘッダー ファイル\Object</Filter>
+      <Filter>ヘッダー ファイル\Object\2D</Filter>
     </ClInclude>
     <ClInclude Include="bg.h">
-      <Filter>ヘッダー ファイル\Object</Filter>
+      <Filter>ヘッダー ファイル\Object\2D</Filter>
     </ClInclude>
     <ClInclude Include="fade.h">
-      <Filter>ヘッダー ファイル\Object</Filter>
+      <Filter>ヘッダー ファイル\Object\2D</Filter>
     </ClInclude>
     <ClInclude Include="number.h">
-      <Filter>ヘッダー ファイル\Object</Filter>
+      <Filter>ヘッダー ファイル\Object\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="object2D.h">
+      <Filter>ヘッダー ファイル\Object\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="ranking.h">
+      <Filter>ヘッダー ファイル\Object\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="score.h">
+      <Filter>ヘッダー ファイル\Object\2D</Filter>
     </ClInclude>
     <ClInclude Include="object.h">
       <Filter>ヘッダー ファイル\Object</Filter>
     </ClInclude>
-    <ClInclude Include="object2D.h">
-      <Filter>ヘッダー ファイル\Object</Filter>
+    <ClInclude Include="camera.h">
+      <Filter>ヘッダー ファイル\System</Filter>
     </ClInclude>
-    <ClInclude Include="ranking.h">
-      <Filter>ヘッダー ファイル\Object</Filter>
+    <ClInclude Include="collision.h">
+      <Filter>ヘッダー ファイル\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="score.h">
-      <Filter>ヘッダー ファイル\Object</Filter>
+    <ClInclude Include="collision_rectangle3D.h">
+      <Filter>ヘッダー ファイル\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="collision_sphere.h">
+      <Filter>ヘッダー ファイル\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="model3D.h">
+      <Filter>ヘッダー ファイル\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="parts.h">
+      <Filter>ヘッダー ファイル\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="light.h">
+      <Filter>ヘッダー ファイル\System</Filter>
+    </ClInclude>
+    <ClInclude Include="line.h">
+      <Filter>ヘッダー ファイル\Object\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>ヘッダー ファイル\Object\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="model_obj.h">
+      <Filter>ヘッダー ファイル\Object\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_model3D.h">
+      <Filter>ヘッダー ファイル\Object\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="object3D.h">
+      <Filter>ヘッダー ファイル\Object\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="orbit.h">
+      <Filter>ヘッダー ファイル\Object\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="motion.h">
+      <Filter>ヘッダー ファイル\Utility</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

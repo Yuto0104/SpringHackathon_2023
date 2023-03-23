@@ -16,6 +16,7 @@
 #include "renderer.h"
 #include "application.h"
 #include "object.h"
+#include "camera.h"
 
 //*****************************************************************************
 // 静的メンバ変数宣言
@@ -127,6 +128,12 @@ void CSuper::UpdateAll(void)
 //=============================================================================
 void CSuper::DrawAll()
 {
+	// カメラポインタ
+	CCamera *pCamera = CApplication::GetCamera();
+
+	// カメラの描画
+	pCamera->Set();
+
 	for (int nCntPriority = 0; nCntPriority < MAX_LEVEL; nCntPriority++)
 	{
 		if (m_pTop[nCntPriority] != nullptr)
