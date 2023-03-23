@@ -53,11 +53,12 @@ private:
 	void  PlayerController(void);										//プレイヤーの操作
 	static const float m_MaxWalkingSpeed;								//最大の歩くスピード
 
+	CCollision_Rectangle3D *m_pCollisionRectangle3D;					//3D矩形の当たり判定
 	D3DXVECTOR3 m_pos;													//位置
 	D3DXVECTOR3 m_move;													//速度
 	D3DXVECTOR3 m_rot;													//向き
 	D3DXMATRIX  m_mtxWorld;												//ワールドマトリックス
-	CCollision_Rectangle3D *m_pCollisionRectangle3D;					//3D矩形の当たり判定
+	int m_nLife;														//体力
 };
 
 #endif
