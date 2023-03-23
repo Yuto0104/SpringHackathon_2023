@@ -1,8 +1,7 @@
 //=============================================================================
 //
-// ゲームクラス(game.cpp)
-// Author : 唐﨑結斗
-// 概要 : ゲームクラスの管理を行う
+// select_item.cpp
+// Author : 梶田大夢
 //
 //=============================================================================
 
@@ -11,7 +10,7 @@
 //*****************************************************************************
 #include <assert.h>
 
-#include "game.h"
+#include "select_item.h"
 #include "calculation.h"
 #include "keyboard.h"
 #include "mouse.h"
@@ -19,55 +18,44 @@
 #include "renderer.h"
 #include "object.h"
 #include "bg.h"
-#include "debug_proc.h"
 #include "score.h"
 #include "time.h"
-#include "camera.h"
-#include "enemy.h"
-#include "mesh.h"
 #include "sound.h"
-#include "player.h"
-#include "mine.h"
+#include "object2D.h"
+#include "fade.h"
+#include "debug_proc.h"
 
 //*****************************************************************************
 // 静的メンバ変数宣言
 //*****************************************************************************
-CScore *CGame::m_pScore = nullptr;						// スコアインスタンス
-CTime *CGame::m_pTime = nullptr;						// タイム
-CEnemy *CGame::m_pEnemy = nullptr;						// エネミー
-CPlayer *CGame::m_pPlayer = nullptr;					// プレイヤー
-D3DXCOLOR CGame::fogColor;								// フォグカラー
-float CGame::fFogStartPos;								// フォグの開始点
-float CGame::fFogEndPos;								// フォグの終了点
-float CGame::fFogDensity;								// フォグの密度
-bool CGame::m_bGame = false;							// ゲームの状況
+D3DXCOLOR CSelectItem::fogColor;							// フォグカラー
+float CSelectItem::fFogStartPos;							// フォグの開始点
+float CSelectItem::fFogEndPos;								// フォグの終了点
+float CSelectItem::fFogDensity;								// フォグの密度
 
 //=============================================================================
 // コンストラクタ
-// Author : 唐﨑結斗
-// 概要 : インスタンス生成時に行う処理
+// Author : 梶田大夢
 //=============================================================================
-CGame::CGame()
+CSelectItem::CSelectItem() : m_pSelectItem(nullptr)
 {
 
 }
 
 //=============================================================================
 // デストラクタ
-// Author : 唐﨑結斗
-// 概要 : インスタンス終了時に行う処理
+// Author : 梶田大夢
 //=============================================================================
-CGame::~CGame()
+CSelectItem::~CSelectItem()
 {
 
 }
 
 //=============================================================================
 // 初期化
-// Author : 唐﨑結斗
-// 概要 : 頂点バッファを生成し、メンバ変数の初期値を設定
+// Author : 梶田大夢
 //=============================================================================
-HRESULT CGame::Init()
+HRESULT CSelectItem::Init()
 {// マウスの取得
 	CMouse *pMouse = CApplication::GetMouse();
 
@@ -76,52 +64,10 @@ HRESULT CGame::Init()
 
 	// サウンド情報の取得
 	CSound *pSound = CApplication::GetSound();
-	pSound->PlaySound(CSound::SOUND_LABEL_BGM001);
+	pSound->PlaySound(CSound::SOUND_LABEL_BGM003);
 
 	// 重力の値を設定
 	CCalculation::SetGravity(0.2f);
-
-	// スコア
-	m_pScore = CScore::Create(10, false);
-	m_pScore->SetScore(0);
-	m_pScore->SetPos(D3DXVECTOR3(1280.0f, m_pScore->GetSize().y / 2.0f, 0.0f));
-
-	// タイム
-	m_pTime = CTime::Create(3);
-	m_pTime->SetTime(120);
-	m_pTime->SetTimeAdd(false);
-	m_pTime->SetPos(D3DXVECTOR3(640.0f, m_pTime->GetSize().y / 2.0f, 0.0f));
-
-	// プレイヤー生成
-	m_pPlayer = CPlayer::Create(D3DXVECTOR3(50.0f, 0.0f, 100.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f));
-
-	// カメラの追従設定(目標 : プレイヤー)
-	CCamera *pCamera = CApplication::GetCamera();
-	pCamera->SetViewType(CCamera::TYPE_PARALLEL);
-	pCamera->SetFollowTarget(m_pPlayer, 1.0);
-	pCamera->SetPosVOffset(D3DXVECTOR3(0.0f, 0.0f, -1600.0f));
-	pCamera->SetPosROffset(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	pCamera->SetUseRoll(false, false);
-
-	// メッシュの設置
-	CMesh3D *pMesh = CMesh3D::Create();
-	assert(pMesh != nullptr);
-	// 数値の設定
-	pMesh->SetPos(D3DXVECTOR3(0.0f, 0.0f, 1000.0f));
-	pMesh->SetRot(D3DXVECTOR3(D3DX_PI * -0.5f, 0.0f, 0.0f));
-	pMesh->SetSize(D3DXVECTOR3(10000.0f, 0.0f, 10000.0f));
-	pMesh->SetCol(D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
-	//pMesh->LoadTex(nType);
-	//pMesh->SetBlock(block);
-	//pMesh->SetSplitTex(bSplitTex);
-	//pMesh->SetScrollTex(move, bScrollTex);
-	//pMesh->SetUseCollison(bCollison);
-
-	CMine::Create(D3DXVECTOR3(100.0f, 0.0f, 100.0f), D3DXVECTOR3(200.0f, 200.0f, 0.0f));
-
-	// エネミー
-	m_pEnemy = CEnemy::Create(D3DXVECTOR3(100.0f,0.0f,100.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f));
 
 	// マウスカーソルを消す
 	pMouse->SetShowCursor(false);
@@ -146,17 +92,26 @@ HRESULT CGame::Init()
 	// フォグの密度の設定
 	pDevice->SetRenderState(D3DRS_FOGDENSITY, *(DWORD*)(&fFogDensity));
 
-	m_bGame = true;
+	m_pSelectItem = CObject2D::Create();
+	m_pSelectItem->SetPos(D3DXVECTOR3(500.0f, 350.0f, 0.0f));
+	m_pSelectItem->SetSize(D3DXVECTOR3(300.0f, 350.0f, 0.0f));
+	m_pSelectItem->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	m_pSelectItem->LoadTex(-1);
+
+	m_pSelectItem2 = CObject2D::Create();
+	m_pSelectItem2->SetPos(D3DXVECTOR3(800.0f, 350.0f, 0.0f));
+	m_pSelectItem2->SetSize(D3DXVECTOR3(300.0f, 350.0f, 0.0f));
+	m_pSelectItem2->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	m_pSelectItem2->LoadTex(-1);
 
 	return S_OK;
 }
 
 //=============================================================================
 // 終了
-// Author : 唐﨑結斗
-// 概要 : テクスチャのポインタと頂点バッファの解放
+// Author : 梶田大夢
 //=============================================================================
-void CGame::Uninit()
+void CSelectItem::Uninit()
 {// マウスの取得
 	CMouse *pMouse = CApplication::GetMouse();
 
@@ -168,9 +123,6 @@ void CGame::Uninit()
 
 	// サウンド終了
 	pSound->StopSound();
-
-	CCamera *pCamera = CApplication::GetCamera();
-	pCamera->SetFollowTarget(false);
 
 	// フォグの有効設定
 	pDevice->SetRenderState(D3DRS_FOGENABLE, FALSE);
@@ -184,37 +136,82 @@ void CGame::Uninit()
 
 //=============================================================================
 // 更新
-// Author : 唐﨑結斗
-// 概要 : 更新を行う
+// Author : 梶田大夢
 //=============================================================================
-void CGame::Update()
+void CSelectItem::Update()
 {
-	// キーボードの取得
 	CKeyboard *pKeyboard = CApplication::GetKeyboard();
-	CCamera *pCamera = CApplication::GetCamera();
 
-	if (pKeyboard->GetPress(DIK_LSHIFT))
+	//頂点カラーの更新
+	if (m_Menu == 0)
 	{
-		pCamera->Zoom();
+		m_pSelectItem->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+		m_pSelectItem2->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f));
+	}
+	else if (m_Menu == 1)
+	{
+		m_pSelectItem->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f));
+		m_pSelectItem2->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 
-	if (pKeyboard->GetTrigger(DIK_H))
-	{
-		CApplication::SetNextMode(CApplication::MODE_SELECTITEM);
+	if (pKeyboard->GetTrigger(DIK_A))
+	{//←が入力されたとき
+	 //サウンドの再生
+		//PlaySound(SOUND_LABEL_SE_SEL);
+
+		m_Menu--;
+		if (m_Menu < 0)
+		{
+			m_Menu = 0;
+		}
+	}
+	else if (pKeyboard->GetTrigger(DIK_D))
+	{//→が入力されたとき
+	 //サウンドの再生
+		//PlaySound(SOUND_LABEL_SE_SEL);
+
+		m_Menu++;
+		if (m_Menu >= 2)
+		{
+			m_Menu = 1;
+		}
 	}
 
-	if (!m_bGame)
+	//メニュー選択でフェード移行
+	switch (m_Menu)
 	{
-		CApplication::SetNextMode(CApplication::MODE_RESULT);
+	case 0:
+		if (pKeyboard->GetTrigger(DIK_RETURN) == true)
+		{
+			//サウンドの再生
+			//PlaySound(SOUND_LABEL_SE_DEC);
+
+			//モードのセット処理
+			CApplication::SetNextMode(CApplication::MODE_GAME);
+			break;
+		}
+	case 1:
+		if (pKeyboard->GetTrigger(DIK_RETURN) == true)
+		{
+			//サウンドの再生
+			//PlaySound(SOUND_LABEL_SE_DEC);
+
+			//モードのセット処理
+			CApplication::SetNextMode(CApplication::MODE_TUTORIAL);
+			break;
+		}
 	}
+
+#ifdef _DEBUG
+	//CDebugProc::Print("メニュー | 1 | 2 |\n", m_Menu);
+#endif // _DEBUG
 }
 
 //=============================================================================
 // 描画
-// Author : 唐﨑結斗
-// 概要 : 描画を行う
+// Author : 梶田大夢
 //=============================================================================
-void CGame::Draw()
+void CSelectItem::Draw()
 {
 
 }

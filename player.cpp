@@ -15,6 +15,7 @@
 #include "keyboard.h"
 #include "collision_rectangle3D.h"
 #include "debug_proc.h"
+#include "enemy.h"
 
 //=============================================================================
 //							静的変数の初期化
@@ -95,7 +96,25 @@ void CPlayer::Update(void)
 	m_move.z += (0.0f - m_move.z) * 0.1f;
 
 	//当たり判定
-	bool b = m_pCollisionRectangle3D->Collision(CObject::OBJETYPE_ENEMY, true);
+	if (m_pCollisionRectangle3D->Collision(CObject::OBJETYPE_ENEMY, true))
+	{
+		CEnemy *pEnemy = (CEnemy*)m_pCollisionRectangle3D->GetCollidedObj();
+
+		D3DXVECTOR3 move = pEnemy->GetPos() - pEnemy->GetPosOld();
+
+		m_pos = GetPos();
+
+		if (m_pCollisionRectangle3D->GetState() == CCollision_Rectangle3D::STATE_X)
+		{
+			m_pos.x += move.x;
+		}
+		else if (m_pCollisionRectangle3D->GetState() == CCollision_Rectangle3D::STATE_Y)
+		{
+			m_pos.y += move.y;
+		}
+
+		SetPos(m_pos);
+	}
 
 #ifdef _DEBUG
 	CDebugProc::Print("プレイヤーの位置 | X : %.3f | Y : %.3f | Z : %.3f |\n", m_pos.x, m_pos.y, m_pos.z);
