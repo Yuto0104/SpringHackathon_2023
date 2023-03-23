@@ -13,7 +13,9 @@
 #include "application.h"
 #include "score.h"
 #include "keyboard.h"
+#include "collision_rectangle3D.h"
 #include "debug_proc.h"
+#include "enemy.h"
 
 //=============================================================================
 //							静的変数の初期化
@@ -23,6 +25,9 @@ const float CPlayer::m_MaxWalkingSpeed = 1.0f;			//最大歩くスピード
 //コンストラクタ
 CPlayer::CPlayer()
 {
+	//タイプの付与
+	SetObjType(OBJETYPE_PLAYER);
+
 	//メンバー変数をクリアする
 	m_pos = D3DXVECTOR3(0.0f,0.0f,0.0f);			//位置
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			//速度の初期化処理
@@ -43,6 +48,12 @@ HRESULT CPlayer::Init(void)
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			//速度の初期化処理
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			//向き
 
+	// 3D矩形の当たり判定の設定
+	m_pCollisionRectangle3D = CCollision_Rectangle3D::Create();
+	m_pCollisionRectangle3D->SetParent(this);
+	m_pCollisionRectangle3D->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pCollisionRectangle3D->SetSize(D3DXVECTOR3(45.0f, 45.0f, 20.0f));
+
 	CObject3D::Init();
 
 	return S_OK;
@@ -52,6 +63,12 @@ HRESULT CPlayer::Init(void)
 void CPlayer::Uninit(void)
 {
 	CObject3D::Uninit();
+
+	if (m_pCollisionRectangle3D != nullptr)
+	{//3D矩形の当たり判定の終了処理
+		m_pCollisionRectangle3D->Uninit();
+		m_pCollisionRectangle3D = nullptr;
+	}
 
 	//解放
 	Release();
@@ -65,6 +82,9 @@ void CPlayer::Update(void)
 	m_pos = CObject3D::GetPos();
 	m_rot = CObject3D::GetRot();
 
+	//前回位置の保存
+	SetPosOld(m_pos);
+
 	m_pos += m_move;
 
 	SetPos(m_pos);
@@ -74,6 +94,27 @@ void CPlayer::Update(void)
 	m_move.x += (0.0f - m_move.x) * 0.1f;
 	m_move.y += (0.0f - m_move.y) * 0.1f;
 	m_move.z += (0.0f - m_move.z) * 0.1f;
+
+	//当たり判定
+	if (m_pCollisionRectangle3D->Collision(CObject::OBJETYPE_ENEMY, true))
+	{
+		CEnemy *pEnemy = (CEnemy*)m_pCollisionRectangle3D->GetCollidedObj();
+
+		D3DXVECTOR3 move = pEnemy->GetPos() - pEnemy->GetPosOld();
+
+		m_pos = GetPos();
+
+		if (m_pCollisionRectangle3D->GetState() == CCollision_Rectangle3D::STATE_X)
+		{
+			m_pos.x += move.x;
+		}
+		else if (m_pCollisionRectangle3D->GetState() == CCollision_Rectangle3D::STATE_Y)
+		{
+			m_pos.y += move.y;
+		}
+
+		SetPos(m_pos);
+	}
 
 #ifdef _DEBUG
 	CDebugProc::Print("プレイヤーの位置 | X : %.3f | Y : %.3f | Z : %.3f |\n", m_pos.x, m_pos.y, m_pos.z);

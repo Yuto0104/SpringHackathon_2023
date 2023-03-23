@@ -14,6 +14,8 @@
 #include "enemy.h"
 #include "collision_rectangle3D.h"
 #include "renderer.h"
+#include "game.h"
+#include "player.h"
 #include "application.h"
 
 //=============================================================================
@@ -48,7 +50,8 @@ CEnemy * CEnemy::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 //=============================================================================
 CEnemy::CEnemy()
 {
-
+	// タイプの付与
+	SetObjType(OBJETYPE_ENEMY);
 }
 
 //=============================================================================
@@ -69,7 +72,6 @@ CEnemy::~CEnemy()
 HRESULT CEnemy::Init()
 {// 初期化処理
 	CObject3D::Init();
-	m_move = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 
 	// 3D矩形の当たり判定の設定
 	m_pCollisionRectangle3D = CCollision_Rectangle3D::Create();
@@ -107,13 +109,25 @@ void CEnemy::Uninit()
 //=============================================================================
 void CEnemy::Update()
 {// 更新処理
+	// 情報の取得
+	CPlayer *pPlayer = CGame::GetPlayer();
 	D3DXVECTOR3 pos = GetPos();
-	//位置の更新
+	D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
+
+	// 追尾
+	float fRot = sqrtf((float)(pow(PlayerPos.x - pos.x, 2) + pow(PlayerPos.y - pos.y, 2)));
+	m_move.x = (PlayerPos.x - pos.x) / (fRot / 1.0f);
+	m_move.y = (PlayerPos.y - pos.y) / (fRot / 1.0f);
+
+	//前回位置の保存
+	SetPosOld(pos);
+
+	// 位置の更新
 	pos += m_move;
 	SetPos(pos);
 
-	//当たり判定
-	m_pCollisionRectangle3D->Collision(CObject::OBJETYPE_ENEMY, true);
+	// 当たり判定
+	m_pCollisionRectangle3D->Collision(CObject::OBJETYPE_PLAYER, true);
 }
 
 //=============================================================================

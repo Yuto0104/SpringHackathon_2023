@@ -34,6 +34,7 @@
 CScore *CGame::m_pScore = nullptr;						// スコアインスタンス
 CTime *CGame::m_pTime = nullptr;						// タイム
 CEnemy *CGame::m_pEnemy = nullptr;						// エネミー
+CPlayer *CGame::m_pPlayer = nullptr;					// プレイヤー
 D3DXCOLOR CGame::fogColor;								// フォグカラー
 float CGame::fFogStartPos;								// フォグの開始点
 float CGame::fFogEndPos;								// フォグの終了点
@@ -90,20 +91,24 @@ HRESULT CGame::Init()
 	m_pTime->SetTimeAdd(false);
 	m_pTime->SetPos(D3DXVECTOR3(640.0f, m_pTime->GetSize().y / 2.0f, 0.0f));
 
+	// プレイヤー生成
+	m_pPlayer = CPlayer::Create(D3DXVECTOR3(50.0f, 0.0f, 100.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f));
+
 	// カメラの追従設定(目標 : プレイヤー)
 	CCamera *pCamera = CApplication::GetCamera();
-	//pCamera->SetViewType(CCamera::TYPE_PARALLEL);
-	//pCamera->SetFollowTarget(m_pPlayer, 1.0);
-	pCamera->SetPosVOffset(D3DXVECTOR3(0.0f, 0.0f, 200.0f));
+	pCamera->SetViewType(CCamera::TYPE_PARALLEL);
+	pCamera->SetFollowTarget(m_pPlayer, 1.0);
+	pCamera->SetPosVOffset(D3DXVECTOR3(0.0f, 0.0f, -1600.0f));
 	pCamera->SetPosROffset(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	pCamera->SetUseRoll(true, false);
+	pCamera->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	pCamera->SetUseRoll(false, false);
 
 	// メッシュの設置
 	CMesh3D *pMesh = CMesh3D::Create();
 	assert(pMesh != nullptr);
 	// 数値の設定
-	pMesh->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	pMesh->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	pMesh->SetPos(D3DXVECTOR3(0.0f, 0.0f, 1000.0f));
+	pMesh->SetRot(D3DXVECTOR3(D3DX_PI * -0.5f, 0.0f, 0.0f));
 	pMesh->SetSize(D3DXVECTOR3(10000.0f, 0.0f, 10000.0f));
 	pMesh->SetCol(D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
 	//pMesh->LoadTex(nType);
@@ -112,7 +117,7 @@ HRESULT CGame::Init()
 	//pMesh->SetScrollTex(move, bScrollTex);
 	//pMesh->SetUseCollison(bCollison);
 
-	CPlayer::Create(D3DXVECTOR3(50.0f, 0.0f, 100.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f));
+	
 
 	// エネミー
 	m_pEnemy = CEnemy::Create(D3DXVECTOR3(100.0f,0.0f,100.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f));
