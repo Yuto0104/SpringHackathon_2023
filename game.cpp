@@ -117,8 +117,6 @@ HRESULT CGame::Init()
 	//pMesh->SetScrollTex(move, bScrollTex);
 	//pMesh->SetUseCollison(bCollison);
 
-	
-
 	// エネミー
 	m_pEnemy = CEnemy::Create(D3DXVECTOR3(100.0f,0.0f,100.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f));
 
@@ -167,6 +165,9 @@ void CGame::Uninit()
 
 	// サウンド終了
 	pSound->StopSound();
+
+	CCamera *pCamera = CApplication::GetCamera();
+	pCamera->SetFollowTarget(false);
 
 	// フォグの有効設定
 	pDevice->SetRenderState(D3DRS_FOGENABLE, FALSE);
