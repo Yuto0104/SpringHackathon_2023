@@ -48,8 +48,6 @@ private:
 	int m_nMineCT;														//地雷のクールタイム
 	int m_nLife;														//体力
 	int m_nBulletCreateTime;
-
-	bool m_SkillFlag;														//スキルのフラグ
 };
 
 #endif

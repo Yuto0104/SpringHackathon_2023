@@ -65,6 +65,7 @@ private:
 	int m_nNumber;				// 目標の番号
 	int m_nCntFrame;			// フレームカウント
 	bool m_bScroll;				// スクロール
+	bool m_SkillFlag;			//スキルのフラグ
 };
 
 #endif
