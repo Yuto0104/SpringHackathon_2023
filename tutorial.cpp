@@ -68,7 +68,7 @@ HRESULT CTutorial::Init()
 
 	// サウンド情報の取得
 	CSound *pSound = CApplication::GetSound();
-	pSound->PlaySound(CSound::SOUND_LABEL_BGM003);
+	//pSound->PlaySound(CSound::SOUND_LABEL_BGM003);
 
 	// 重力の値を設定
 	CCalculation::SetGravity(0.2f);

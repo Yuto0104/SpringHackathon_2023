@@ -16,6 +16,9 @@
 #include "collision_rectangle3D.h"
 #include "debug_proc.h"
 #include "enemy.h"
+#include "forcefield.h"
+#include "missile.h"
+#include "bullet3D.h"
 
 //=============================================================================
 //							静的変数の初期化
@@ -47,6 +50,9 @@ HRESULT CPlayer::Init(void)
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			//位置
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			//速度の初期化処理
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			//向き
+	m_SkillFlag = false;
+	m_nLife = 10;
+	m_nBulletCreateTime = 0;
 	m_nMineCT = 0;									//クールタイム
 
 	// 3D矩形の当たり判定の設定
@@ -87,6 +93,19 @@ void CPlayer::Update(void)
 	SetPosOld(m_pos);
 
 	m_pos += m_move;
+
+	if (m_SkillFlag == false)
+	{
+		CForceField::Create(m_pos, D3DXVECTOR3(60.0f, 60.0f, 0.0f));
+		m_SkillFlag = true;
+	}
+
+	m_nBulletCreateTime--;
+	if (m_nBulletCreateTime <= 0)
+	{
+		CMissile::Create(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		m_nBulletCreateTime = 350;
+	}
 
 	SetPos(m_pos);
 	SetRot(m_rot);
