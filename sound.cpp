@@ -57,10 +57,10 @@ HRESULT CSound::Init(HWND hWnd)
 	HRESULT hr;
 
 	// 各音素材のパラメータ
-	m_aParam[SOUND_LABEL_BGM000] = SetSoundParam("data/BGM/bgm000.wav", -1);
-	m_aParam[SOUND_LABEL_BGM001] = SetSoundParam("data/BGM/bgm001.wav", -1);
-	m_aParam[SOUND_LABEL_BGM002] = SetSoundParam("data/BGM/bgm002.wav", -1);
-	m_aParam[SOUND_LABEL_BGM003] = SetSoundParam("data/BGM/bgm003.wav", -1);
+	m_aParam[SOUND_LABEL_BGM000] = SetSoundParam("data/BGM/bgm01.wav", -1);
+	//m_aParam[SOUND_LABEL_BGM001] = SetSoundParam("data/BGM/bgm001.wav", -1);
+	//m_aParam[SOUND_LABEL_BGM002] = SetSoundParam("data/BGM/bgm002.wav", -1);
+	//m_aParam[SOUND_LABEL_BGM003] = SetSoundParam("data/BGM/bgm003.wav", -1);
 
 	// COMライブラリの初期化
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);

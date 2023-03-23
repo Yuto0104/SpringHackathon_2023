@@ -33,6 +33,9 @@ public:
 
 	static CPlayer* Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size);	//生成処理
 
+	int GetLife() { return m_nLife; }
+	void SetLife(int life) { m_nLife = life; }
+
 private:
 	void  PlayerController(void);										//プレイヤーの操作
 	static const float m_MaxWalkingSpeed;								//最大の歩くスピード
@@ -44,6 +47,9 @@ private:
 	D3DXMATRIX  m_mtxWorld;												//ワールドマトリックス
 	int m_nMineCT;														//地雷のクールタイム
 	int m_nLife;														//体力
+	int m_nBulletCreateTime;
+
+	bool m_SkillFlag;														//スキルのフラグ
 };
 
 #endif

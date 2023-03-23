@@ -38,6 +38,7 @@ public:
 	static CEnemy *GetEnemy() { return m_pEnemy; }					// エネミー
 	static CPlayer *GetPlayer() { return m_pPlayer; }				// プレイヤー
 	static void SetGame(const bool bGame) { m_bGame = bGame; }		// ゲームの状況の設定
+	static void SetEnemy(CEnemy *enemy) { m_pEnemy = enemy; }
 
 	//--------------------------------------------------------------------
 	// コンストラクタとデストラクタ
