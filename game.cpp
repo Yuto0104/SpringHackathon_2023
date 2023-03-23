@@ -29,6 +29,8 @@
 #include "player.h"
 #include "mine.h"
 #include "pause.h"
+#include "calculation.h"
+#include "select_item.h"
 #include "lille.h"
 
 //*****************************************************************************
@@ -96,7 +98,7 @@ HRESULT CGame::Init()
 	m_pTime->SetPos(D3DXVECTOR3(640.0f, m_pTime->GetSize().y / 2.0f, 0.0f));
 
 	// プレイヤー生成
-	m_pPlayer = CPlayer::Create(D3DXVECTOR3(50.0f, 0.0f, 100.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f));
+	m_pPlayer = CPlayer::Create(D3DXVECTOR3(50.0f, 0.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f));
 
 	// カメラの追従設定(目標 : プレイヤー)
 	CCamera *pCamera = CApplication::GetCamera();
@@ -119,10 +121,8 @@ HRESULT CGame::Init()
 	//pMesh->SetScrollTex(move, bScrollTex);
 	//pMesh->SetUseCollison(bCollison);
 
-	CMine::Create(D3DXVECTOR3(100.0f, 0.0f, 100.0f), D3DXVECTOR3(200.0f, 200.0f, 0.0f));
-
-	// エネミー
-	m_pEnemy = CEnemy::Create(D3DXVECTOR3(100.0f,0.0f,100.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f));
+	// 地雷
+	CMine::Create(D3DXVECTOR3(100.0f, 50.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f),1);
 
 	// マウスカーソルを消す
 	pMouse->SetShowCursor(false);
@@ -147,7 +147,9 @@ HRESULT CGame::Init()
 	// フォグの密度の設定
 	pDevice->SetRenderState(D3DRS_FOGDENSITY, *(DWORD*)(&fFogDensity));
 
+	//初期化
 	m_bGame = true;
+	m_nSpawnTime = 0;
 
 	return S_OK;
 }
@@ -194,6 +196,7 @@ void CGame::Update()
 	CKeyboard *pKeyboard = CApplication::GetKeyboard();
 	CCamera *pCamera = CApplication::GetCamera();
 	CPause *pPause = CApplication::GetPause();
+	CSelectItem *pSelect = CApplication::GetSelectItem();
 
 	if (pKeyboard->GetPress(DIK_LSHIFT))
 	{
@@ -211,10 +214,26 @@ void CGame::Update()
 		pPause->SetPause(false, false);
 	}
 
-	if (pKeyboard->GetTrigger(DIK_H))
+	if (!pSelect->GetPause()
+		&& pKeyboard->GetTrigger(DIK_H))
 	{
-		pPause->SetPause(true);
-		//CApplication::SetNextMode(CApplication::MODE_SELECTITEM);
+		pSelect->SetPause(true, true);
+
+	}
+	else if (pSelect->GetPause()
+		&& pKeyboard->GetTrigger(DIK_H))
+	{
+		pSelect->SetPause(false, false);
+	}
+
+	if (m_nSpawnTime < 60)
+	{//スポーン時間が一定以下なら加算する
+		m_nSpawnTime++;
+	}
+	else if (m_nSpawnTime >= 60)
+	{//一定以上ならスポーンさせて0にする
+		EnemySpawn();
+		m_nSpawnTime = 0;
 	}
 
 	if (m_pLille == nullptr
@@ -244,4 +263,51 @@ void CGame::Update()
 void CGame::Draw()
 {
 
+}
+
+//=============================================================================
+// エネミーのスポーン
+// Author : 髙野馨將
+// 概要 : 敵を出現させる
+//=============================================================================
+void CGame::EnemySpawn()
+{
+	// スポーンする方向
+	int Spawn = 0;
+	if (m_pPlayer != nullptr)
+	{
+		// プレイヤーの位置を取得
+		D3DXVECTOR3 pos = m_pPlayer->GetPos();
+		D3DXVECTOR3 EnemyPos;
+		// ランダムで敵のスポーンする方向を決める
+		Spawn = CCalculation::Rand(4);
+		// ランダムで敵のxかyを変える
+		int rand = CCalculation::Rand(5,-2);
+
+		switch (Spawn)
+		{// エネミーのスポーン
+		case 0:
+			// 左
+			m_pEnemy = CEnemy::Create(D3DXVECTOR3(pos.x - (CRenderer::SCREEN_WIDTH / 2), pos.y + (125.0f * rand), 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f), 3);
+			break;
+
+		case 1:
+			// 右
+			m_pEnemy = CEnemy::Create(D3DXVECTOR3(pos.x + (CRenderer::SCREEN_WIDTH / 2), pos.y + (125.0f * rand), 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f), 3);
+			break;
+
+		case 2:
+			// 下
+			m_pEnemy = CEnemy::Create(D3DXVECTOR3(pos.x + (245.0f * rand), pos.y + (CRenderer::SCREEN_HEIGHT / 2), 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f), 3);
+			break;
+
+		case 3:
+			// 上
+			m_pEnemy = CEnemy::Create(D3DXVECTOR3(pos.x + (245.0f * rand), pos.y - (CRenderer::SCREEN_HEIGHT / 2), 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f), 3);
+			break;
+
+		default:
+			break;
+		}
+	}
 }

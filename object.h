@@ -31,11 +31,13 @@ public:
 		OBJTYPE_NONE = 0,			// タイプ無し
 		OBJTYPE_FADE,				// フェード
 		OBJTYPE_PAUSE,				// ポーズ
+		OBJTYPE_SELECT_ITEM,		// アイテムセレクト
 		OBJETYPE_PLAYER,			// プレイヤー
 		OBJETYPE_ENEMY,				// エネミー
 		OBJTYPE_3DMODEL,			// 3Dモデル
 		OBJETYPE_MESH,				// メッシュ
 		OBJTYPE_3DBULLET,			// 弾
+		OBJETYPE_MINE,				// 地雷
 		MAX_OBJTYPE,				// 種別の最大数
 	};
 
