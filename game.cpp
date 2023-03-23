@@ -30,6 +30,7 @@
 #include "mine.h"
 #include "pause.h"
 #include "calculation.h"
+#include "select_item.h"
 
 //*****************************************************************************
 // Ã“Iƒƒ“ƒo•Ï”éŒ¾
@@ -195,6 +196,7 @@ void CGame::Update()
 	CKeyboard *pKeyboard = CApplication::GetKeyboard();
 	CCamera *pCamera = CApplication::GetCamera();
 	CPause *pPause = CApplication::GetPause();
+	CSelectItem *pSelect = CApplication::GetSelectItem();
 
 	if (pKeyboard->GetPress(DIK_LSHIFT))
 	{
@@ -212,11 +214,16 @@ void CGame::Update()
 		pPause->SetPause(false, false);
 	}
 
-	if (pKeyboard->GetTrigger(DIK_H))
+	if (!pSelect->GetPause()
+		&& pKeyboard->GetTrigger(DIK_H))
 	{
-		pPause->SetPause(true);
-		//CApplication::SetNextMode(CApplication::MODE_SELECTITEM);
+		pSelect->SetPause(true, true);
 
+	}
+	else if (pSelect->GetPause()
+		&& pKeyboard->GetTrigger(DIK_H))
+	{
+		pSelect->SetPause(false, false);
 	}
 
 	if (m_nSpawnTime < 60)

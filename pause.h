@@ -87,10 +87,12 @@ private:
 	CObject2D		*m_pReturnObj;		// リターンオブジェクト
 	CObject2D		*m_pNewGameObj;		// ニューゲームオブジェクト
 	CObject2D		*m_pTitleObj;		// タイトルオブジェクト
+
 	D3DXVECTOR3		m_pos;				// 位置
 	D3DXVECTOR3		m_posOld;			// 過去の位置
 	D3DXVECTOR3		m_rot;				// 向き
 	D3DXVECTOR3		m_size;				// 大きさ
+
 	float			m_fAddAlpha;		// フレーム数のカウント
 	int				m_nCntFrame;		// フレームカウント
 	bool			m_bPressEnter;		// エンターキーを押せるか
