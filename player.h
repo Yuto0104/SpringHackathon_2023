@@ -46,9 +46,6 @@ public:
 	void Update(void) override;											//XVˆ—
 	void Draw(void) override;											//•`‰æˆ—
 
-	void SetPos(const D3DXVECTOR3 &pos) override { m_pos = pos; }		//ˆÊ’u‚Ìİ’èˆ—
-	void SetRot(const D3DXVECTOR3 &rot) override { m_rot = rot; }		//Œü‚«‚Ìİ’èˆ—
-
 	static CPlayer* Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size);	//¶¬ˆ—
 
 private:

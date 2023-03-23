@@ -18,7 +18,7 @@
 //=============================================================================
 //							静的変数の初期化
 //=============================================================================
-const float CPlayer::m_MaxWalkingSpeed = 7.0f;			//最大歩くスピード
+const float CPlayer::m_MaxWalkingSpeed = 1.0f;			//最大歩くスピード
 
 //コンストラクタ
 CPlayer::CPlayer()
@@ -52,18 +52,28 @@ HRESULT CPlayer::Init(void)
 void CPlayer::Uninit(void)
 {
 	CObject3D::Uninit();
+
+	//解放
+	Release();
 }
 
 //更新処理
 void CPlayer::Update(void)
 {
 	PlayerController();
-	CObject3D::Update();
 
 	m_pos = CObject3D::GetPos();
 	m_rot = CObject3D::GetRot();
 
 	m_pos += m_move;
+
+	SetPos(m_pos);
+	SetRot(m_rot);
+
+	//移動量を更新(減衰させる)
+	m_move.x += (0.0f - m_move.x) * 0.1f;
+	m_move.y += (0.0f - m_move.y) * 0.1f;
+	m_move.z += (0.0f - m_move.z) * 0.1f;
 
 #ifdef _DEBUG
 	CDebugProc::Print("プレイヤーの位置 | X : %.3f | Y : %.3f | Z : %.3f |\n", m_pos.x, m_pos.y, m_pos.z);
@@ -80,18 +90,10 @@ CPlayer* CPlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size)
 {
 	CPlayer* pPlayer = new CPlayer;		//インスタンスを生成する
 
-	//プレイヤーの初期化処理
-	if (FAILED(pPlayer->Init()))
-	{
-		return nullptr;
-	}
-
-	if (!pPlayer)
-	{
-		pPlayer->SetPos(pos);
-		pPlayer->SetSize(size);
-	}
-
+	pPlayer->Init();
+	pPlayer->SetPos(pos);
+	pPlayer->SetSize(size);
+	
 	//生成したインスタンスを返す
 	return pPlayer;
 }
@@ -103,16 +105,16 @@ void CPlayer::PlayerController(void)
 	D3DXVECTOR3 cameraRot = CApplication::GetCamera()->GetRot();	//カメラの向きの取得処理
 
 	//移動量と目的の角度の計算
-	if (pKeyboard->GetPress(DIK_W))
+	if (pKeyboard->GetPress(DIK_UP))
 	{//Wキーが押された場合
-		if (pKeyboard->GetPress(DIK_A))
+		if (pKeyboard->GetPress(DIK_LEFT))
 		{//Aキーも押された場合
 			m_move.x -= sinf(D3DX_PI * 0.75f + cameraRot.y) * m_MaxWalkingSpeed;
 			m_move.z -= cosf(D3DX_PI * 0.75f + cameraRot.y) * m_MaxWalkingSpeed;
 
 			m_rot.y = cameraRot.y - D3DX_PI * 0.25f;
 		}
-		else if (pKeyboard->GetPress(DIK_D))
+		else if (pKeyboard->GetPress(DIK_RIGHT))
 		{//Dキーも押された場合
 			m_move.x += sinf(D3DX_PI * 0.25f + cameraRot.y) * m_MaxWalkingSpeed;
 			m_move.z += cosf(D3DX_PI * 0.25f + cameraRot.y) * m_MaxWalkingSpeed;
@@ -127,16 +129,16 @@ void CPlayer::PlayerController(void)
 			m_rot.y = cameraRot.y;
 		}
 	}
-	else if (pKeyboard->GetPress(DIK_S))
+	else if (pKeyboard->GetPress(DIK_DOWN))
 	{//Sキーが押された場合
-		if (pKeyboard->GetPress(DIK_A))
+		if (pKeyboard->GetPress(DIK_LEFT))
 		{//Aキーも押された場合
 			m_move.x -= sinf(D3DX_PI * 0.25f + cameraRot.y) * m_MaxWalkingSpeed;
 			m_move.z -= cosf(D3DX_PI * 0.25f + cameraRot.y) * m_MaxWalkingSpeed;
 
 			m_rot.y = cameraRot.y - D3DX_PI * 0.75f;
 		}
-		else if (pKeyboard->GetPress(DIK_D))
+		else if (pKeyboard->GetPress(DIK_RIGHT))
 		{//Dキーも押された場合
 			m_move.x += sinf(D3DX_PI * 0.75f + cameraRot.y) * m_MaxWalkingSpeed;
 			m_move.z += cosf(D3DX_PI * 0.75f + cameraRot.y) * m_MaxWalkingSpeed;
@@ -151,14 +153,14 @@ void CPlayer::PlayerController(void)
 			m_rot.y = cameraRot.y - D3DX_PI;
 		}
 	}
-	else if (pKeyboard->GetPress(DIK_D))
+	else if (pKeyboard->GetPress(DIK_RIGHT))
 	{//Dキーだけ押された場合
 		m_move.x += sinf(D3DX_PI * 0.5f + cameraRot.y) * m_MaxWalkingSpeed;
 		m_move.z += cosf(D3DX_PI * 0.5f + cameraRot.y) * m_MaxWalkingSpeed;
 
 		m_rot.y = cameraRot.y + D3DX_PI* 0.5f;
 	}
-	else if (pKeyboard->GetPress(DIK_A))
+	else if (pKeyboard->GetPress(DIK_LEFT))
 	{//Aキーだけ押された場合
 		m_move.x -= sinf(D3DX_PI * 0.5f + cameraRot.y) * m_MaxWalkingSpeed;
 		m_move.z -= cosf(D3DX_PI * 0.5f + cameraRot.y) * m_MaxWalkingSpeed;
