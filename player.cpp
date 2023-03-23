@@ -110,21 +110,21 @@ void CPlayer::PlayerController(void)
 		if (pKeyboard->GetPress(DIK_LEFT))
 		{//Aキーも押された場合
 			m_move.x -= sinf(D3DX_PI * 0.75f + cameraRot.y) * m_MaxWalkingSpeed;
-			m_move.z -= cosf(D3DX_PI * 0.75f + cameraRot.y) * m_MaxWalkingSpeed;
+			m_move.y -= cosf(D3DX_PI * 0.75f + cameraRot.y) * m_MaxWalkingSpeed;
 
 			m_rot.y = cameraRot.y - D3DX_PI * 0.25f;
 		}
 		else if (pKeyboard->GetPress(DIK_RIGHT))
 		{//Dキーも押された場合
 			m_move.x += sinf(D3DX_PI * 0.25f + cameraRot.y) * m_MaxWalkingSpeed;
-			m_move.z += cosf(D3DX_PI * 0.25f + cameraRot.y) * m_MaxWalkingSpeed;
+			m_move.y += cosf(D3DX_PI * 0.25f + cameraRot.y) * m_MaxWalkingSpeed;
 
 			m_rot.y = cameraRot.y + D3DX_PI * 0.25f;
 		}
 		else
 		{//Wキーだけが押された場合
 			m_move.x += sinf(cameraRot.y) * m_MaxWalkingSpeed;
-			m_move.z += cosf(cameraRot.y) * m_MaxWalkingSpeed;
+			m_move.y += cosf(cameraRot.y) * m_MaxWalkingSpeed;
 
 			m_rot.y = cameraRot.y;
 		}
@@ -134,21 +134,21 @@ void CPlayer::PlayerController(void)
 		if (pKeyboard->GetPress(DIK_LEFT))
 		{//Aキーも押された場合
 			m_move.x -= sinf(D3DX_PI * 0.25f + cameraRot.y) * m_MaxWalkingSpeed;
-			m_move.z -= cosf(D3DX_PI * 0.25f + cameraRot.y) * m_MaxWalkingSpeed;
+			m_move.y -= cosf(D3DX_PI * 0.25f + cameraRot.y) * m_MaxWalkingSpeed;
 
 			m_rot.y = cameraRot.y - D3DX_PI * 0.75f;
 		}
 		else if (pKeyboard->GetPress(DIK_RIGHT))
 		{//Dキーも押された場合
 			m_move.x += sinf(D3DX_PI * 0.75f + cameraRot.y) * m_MaxWalkingSpeed;
-			m_move.z += cosf(D3DX_PI * 0.75f + cameraRot.y) * m_MaxWalkingSpeed;
+			m_move.y += cosf(D3DX_PI * 0.75f + cameraRot.y) * m_MaxWalkingSpeed;
 
 			m_rot.y = cameraRot.y + D3DX_PI * 0.75f;
 		}
 		else
 		{//Sキーだけが押された場合
 			m_move.x -= sinf(cameraRot.y) * m_MaxWalkingSpeed;
-			m_move.z -= cosf(cameraRot.y) * m_MaxWalkingSpeed;
+			m_move.y -= cosf(cameraRot.y) * m_MaxWalkingSpeed;
 
 			m_rot.y = cameraRot.y - D3DX_PI;
 		}
@@ -156,14 +156,14 @@ void CPlayer::PlayerController(void)
 	else if (pKeyboard->GetPress(DIK_RIGHT))
 	{//Dキーだけ押された場合
 		m_move.x += sinf(D3DX_PI * 0.5f + cameraRot.y) * m_MaxWalkingSpeed;
-		m_move.z += cosf(D3DX_PI * 0.5f + cameraRot.y) * m_MaxWalkingSpeed;
+		m_move.y += cosf(D3DX_PI * 0.5f + cameraRot.y) * m_MaxWalkingSpeed;
 
 		m_rot.y = cameraRot.y + D3DX_PI* 0.5f;
 	}
 	else if (pKeyboard->GetPress(DIK_LEFT))
 	{//Aキーだけ押された場合
 		m_move.x -= sinf(D3DX_PI * 0.5f + cameraRot.y) * m_MaxWalkingSpeed;
-		m_move.z -= cosf(D3DX_PI * 0.5f + cameraRot.y) * m_MaxWalkingSpeed;
+		m_move.y -= cosf(D3DX_PI * 0.5f + cameraRot.y) * m_MaxWalkingSpeed;
 
 		m_rot.y = cameraRot.y - D3DX_PI * 0.5f;
 	}
