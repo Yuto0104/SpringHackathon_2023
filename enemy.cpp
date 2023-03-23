@@ -12,6 +12,7 @@
 #include <assert.h>
 
 #include "enemy.h"
+#include "collision_rectangle3D.h"
 #include "renderer.h"
 #include "application.h"
 
@@ -68,6 +69,13 @@ CEnemy::~CEnemy()
 HRESULT CEnemy::Init()
 {// 初期化処理
 	CObject3D::Init();
+	m_move = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+
+	// 3D矩形の当たり判定の設定
+	m_pCollisionRectangle3D = CCollision_Rectangle3D::Create();
+	m_pCollisionRectangle3D->SetParent(this);
+	m_pCollisionRectangle3D->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pCollisionRectangle3D->SetSize(D3DXVECTOR3(45.0f, 45.0f, 20.0f));
 
 	return S_OK;
 }
@@ -82,6 +90,12 @@ void CEnemy::Uninit()
 	// 終了処理
 	CObject3D::Uninit();
 
+	if (m_pCollisionRectangle3D != nullptr)
+	{// 3D矩形の当たり判定の終了処理
+		m_pCollisionRectangle3D->Uninit();
+		m_pCollisionRectangle3D = nullptr;
+	}
+
 	// エネミーの解放
 	Release();
 }
@@ -94,7 +108,12 @@ void CEnemy::Uninit()
 void CEnemy::Update()
 {// 更新処理
 	D3DXVECTOR3 pos = GetPos();
-	int a = 0;
+	//位置の更新
+	pos += m_move;
+	SetPos(pos);
+
+	//当たり判定
+	m_pCollisionRectangle3D->Collision(CObject::OBJETYPE_ENEMY, true);
 }
 
 //=============================================================================

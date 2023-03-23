@@ -91,9 +91,9 @@ HRESULT CGame::Init()
 
 	// カメラの追従設定(目標 : プレイヤー)
 	CCamera *pCamera = CApplication::GetCamera();
-	pCamera->SetViewType(CCamera::TYPE_PARALLEL);
+	//pCamera->SetViewType(CCamera::TYPE_PARALLEL);
 	//pCamera->SetFollowTarget(m_pPlayer, 1.0);
-	pCamera->SetPosVOffset(D3DXVECTOR3(0.0f, 0.0f, -200.0f));
+	pCamera->SetPosVOffset(D3DXVECTOR3(0.0f, 0.0f, 200.0f));
 	pCamera->SetPosROffset(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	pCamera->SetUseRoll(true, false);
 
