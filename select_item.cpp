@@ -18,6 +18,8 @@
 #include "sound.h"
 #include "fade.h"
 #include "lille.h"
+#include "game.h"
+#include "player.h"
 
 //=============================================================================
 // インスタンス生成
@@ -403,9 +405,17 @@ void CSelectItem::Select()
 				break;
 
 			case MODE_ITEM:
+			{
 				SetPause(false, false);
 				// プレイヤーの体力回復
-				break;
+				CPlayer *pPlayer = nullptr;
+				pPlayer = CGame::GetPlayer();
+
+				int PlayerLife = pPlayer->GetLife();
+				PlayerLife += 1;
+				pPlayer->SetLife(PlayerLife);
+			}
+			break;
 
 			default:
 				assert(false);
