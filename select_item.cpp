@@ -17,6 +17,7 @@
 #include "keyboard.h"
 #include "sound.h"
 #include "fade.h"
+#include "lille.h"
 
 //=============================================================================
 // インスタンス生成
@@ -51,6 +52,7 @@ CSelectItem::CSelectItem(int nPriority /*= CObject::PRIORITY_LEVEL3*/) : CObject
 	m_pSelectBGObj = nullptr;							// セレクト背景オブジェクト
 	m_pSlotObj = nullptr;								// スロットオブジェクト
 	m_pItemObj = nullptr;								// アイテムオブジェクト
+	m_pLille = nullptr;
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);				// 位置
 	m_posOld = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			// 過去の位置
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);				// 向き
@@ -61,6 +63,7 @@ CSelectItem::CSelectItem(int nPriority /*= CObject::PRIORITY_LEVEL3*/) : CObject
 	m_bPressEnter = true;								// エンターキーを押せるか
 	m_bPause = false;									// ポーズしているか
 	m_bSelect = false;									// 選択の使用状況
+	m_bSlot = false;									// スロット
 }
 
 //=============================================================================
@@ -109,12 +112,38 @@ void CSelectItem::Uninit()
 //=============================================================================
 void CSelectItem::Update()
 {
+	// 入力情報の取得
+	CKeyboard *pKeyboard = CApplication::GetKeyboard();
+
 	if (CApplication::GetMode() == CApplication::MODE_GAME
 		&& !CApplication::GetFade()->GetFadeSituation())
 	{
 		if (m_bSelect)
 		{// 選択画面
 			Select();
+		}
+
+		if (m_bSlot
+			&& m_pLille != nullptr
+			&& pKeyboard->GetTrigger(DIK_RETURN))
+		{
+			m_pLille->StopScroll();
+			m_nCntFrame = 0;
+		}
+		else if (m_bSlot
+			&& m_pLille != nullptr
+			&& !m_pLille->GetScroll())
+		{
+			m_nCntFrame++;
+
+			if (m_nCntFrame % 150 == 0)
+			{
+				m_nCntFrame = 0;
+				m_pLille->Uninit();
+				m_pLille = nullptr;
+				m_bSlot = false;
+				SetPause(false, false);
+			}
 		}
 	}
 }
@@ -209,7 +238,8 @@ void CSelectItem::SetPause(const bool bPause, const bool bSelect)
 	}
 	else
 	{
-		if (m_bSelect)
+		if (m_bSelect
+			&& !m_bSlot)
 		{
 			m_bSelect = false;
 
@@ -345,7 +375,8 @@ void CSelectItem::Select()
 		}
 
 		if (!m_bPressEnter
-			&& m_nCntFrame >= 40)
+			&& m_nCntFrame >= 40
+			&& !m_bSlot)
 		{
 			m_bPressEnter = true;
 			m_nCntFrame = 0;
@@ -353,13 +384,27 @@ void CSelectItem::Select()
 			switch (m_nextMode)
 			{
 			case MODE_SLOT:
-				SetPause(false, false);
-				//CApplication::SetNextMode(CApplication::MODE_TITLE);
+
+				m_pLille = CLille::Create();
+				m_pLille->SetLille(D3DXVECTOR3(640.0f, 360.0f, 0.0f), D3DXVECTOR3(300.0f, 400.0f, 0.0f));
+				m_bSlot = true;
+
+				m_bSelect = false;
+
+				// ポーズ背景オブジェクト
+				m_pSelectBGObj->Uninit();
+
+				// スロットオブジェクト
+				m_pSlotObj->Uninit();
+
+				// アイテムオブジェクト
+				m_pItemObj->Uninit();
+
 				break;
 
 			case MODE_ITEM:
 				SetPause(false, false);
-				//CApplication::SetNextMode(CApplication::MODE_GAME);
+				// プレイヤーの体力回復
 				break;
 
 			default:

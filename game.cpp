@@ -236,19 +236,6 @@ void CGame::Update()
 		m_nSpawnTime = 0;
 	}
 
-	if (m_pLille == nullptr
-		&& pKeyboard->GetTrigger(DIK_W))
-	{
-		m_pLille = CLille::Create();
-		m_pLille->SetLille(D3DXVECTOR3(640.0f, 360.0f, 0.0f), D3DXVECTOR3(300.0f, 400.0f, 0.0f));
-	}
-	else if (m_pLille != nullptr
-		&& pKeyboard->GetTrigger(DIK_W))
-	{
-		m_pLille->StopScroll();
-		m_pLille = nullptr;
-	}
-
 	if (!m_bGame)
 	{
 		CApplication::SetNextMode(CApplication::MODE_RESULT);

@@ -79,6 +79,7 @@ HRESULT CLille::Init()
 {
 	// オブジェクト2Dの終了
 	CObject2D::Init();
+	SetObjType(CObject::OBJTYPE_PAUSE);
 
 	// スクロールを行う
 	m_bScroll = true;		
@@ -91,10 +92,12 @@ HRESULT CLille::Init()
 	m_nNumDest = CCalculation::Rand(10);
 	m_pNumDest->SetNumber(m_nNumDest);
 	m_pNumDest->SetCol(D3DXCOLOR(1.0f, 1.0f, 0.2f, 1.0f));
+	m_pNumDest->SetObjType(CObject::OBJTYPE_PAUSE);
 
 	// 現在の番号
 	m_nNumber = CCalculation::Rand(10);
 	m_pNumber->SetNumber(m_nNumber);
+	m_pNumber->SetObjType(CObject::OBJTYPE_PAUSE);
 
 	return S_OK;
 }
@@ -132,13 +135,6 @@ void CLille::Update()
 		if (m_nNumber == m_nNumDest)
 		{// 当たり
 		
-		}
-
-		m_nCntFrame++;
-
-		if (m_nCntFrame % 150 == 0)
-		{
-			Uninit();
 		}
 	}
 }

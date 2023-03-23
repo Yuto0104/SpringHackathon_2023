@@ -75,6 +75,7 @@ HRESULT CMine::Init()
 {// ‰Šú‰»ˆ—
 	CSkill::Init();
 	m_nDamage = 0;
+	LoadTex(3);
 
 	return S_OK;
 }

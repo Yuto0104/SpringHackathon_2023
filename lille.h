@@ -48,6 +48,7 @@ public:
 	void SetLille(D3DXVECTOR3 pos , D3DXVECTOR3 size);			// リールの設定
 	void StopScroll() { m_bScroll = false; 
 						m_nCntFrame = 0; }					// スクロールの停止
+	bool GetScroll() { return m_bScroll; }
 
 private:
 	//--------------------------------------------------------------------
