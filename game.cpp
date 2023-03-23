@@ -22,6 +22,7 @@
 #include "debug_proc.h"
 #include "score.h"
 #include "time.h"
+#include "camera.h"
 #include "enemy.h"
 #include "sound.h"
 
@@ -86,6 +87,14 @@ HRESULT CGame::Init()
 	m_pTime->SetTime(120);
 	m_pTime->SetTimeAdd(false);
 	m_pTime->SetPos(D3DXVECTOR3(640.0f, m_pTime->GetSize().y / 2.0f, 0.0f));
+
+	// カメラの追従設定(目標 : プレイヤー)
+	CCamera *pCamera = CApplication::GetCamera();
+	//pCamera->SetFollowTarget(m_pPlayer, 1.0);
+	pCamera->SetPosVOffset(D3DXVECTOR3(0.0f, 50.0f, -200.0f));
+	pCamera->SetPosROffset(D3DXVECTOR3(0.0f, 0.0f, 100.0f));
+	pCamera->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+	pCamera->SetUseRoll(true, true);
 
 	// エネミー
 	m_pEnemy = CEnemy::Create(D3DXVECTOR3(100.0f,0.0f,100.0f));
