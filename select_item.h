@@ -16,6 +16,7 @@
 // 前方宣言
 //*****************************************************************************
 class CObject2D;
+class CLille;
 
 //=============================================================================
 // ゲームクラス
@@ -84,7 +85,7 @@ private:
 	CObject2D		*m_pSelectBGObj;	// ポーズ背景オブジェクト
 	CObject2D		*m_pSlotObj;		// スロットオブジェクト
 	CObject2D		*m_pItemObj;		// アイテムオブジェクト
-
+	CLille			*m_pLille;			// リール
 	D3DXVECTOR3		m_pos;				// 位置
 	D3DXVECTOR3		m_posOld;			// 過去の位置
 	D3DXVECTOR3		m_rot;				// 向き
@@ -95,5 +96,6 @@ private:
 	bool			m_bPressEnter;		// エンターキーを押せるか
 	bool			m_bPause;			// ポーズしているか
 	bool			m_bSelect;			// 選択の使用状況
+	bool			m_bSlot;			// スロットを使っているか
 };
 #endif

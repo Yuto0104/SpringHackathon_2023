@@ -1,8 +1,8 @@
 //=============================================================================
 //
-// 地雷クラス(skill.h)
-// Author : 髙野馨將
-// 概要 : オブジェクト生成を行う
+// フォースフィールドクラス(forcefield.h)
+// Author : 斉藤紫杏
+// 概要 : フォースフィールド
 //
 //=============================================================================
 
@@ -11,116 +11,124 @@
 //*****************************************************************************
 #include <assert.h>
 
-#include "mine.h"
+#include "forcefield.h"
 #include "collision_rectangle3D.h"
 #include "renderer.h"
 #include "game.h"
-#include "enemy.h"
 #include "player.h"
+#include "enemy.h"
 #include "application.h"
 
 //=============================================================================
 // インスタンス生成
-// Author : 髙野馨將
-// 概要 : 地雷を生成する
+// Author : 斉藤紫杏
+// 概要 : フォースフィールドを生成する
 //=============================================================================
-CMine * CMine::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, int nDamage)
+CForceField * CForceField::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 {
 	// オブジェクトインスタンス
-	CMine *pMine = nullptr;
-	
+	CForceField *pForceField = nullptr;
+
 	// メモリの解放
-	pMine = new CMine;
+	pForceField = new CForceField;
 	// メモリの確保ができなかった
-	assert(pMine != nullptr);
+	assert(pForceField != nullptr);
 
 	// エネミーの初期化
-	pMine->Init();
-	pMine->m_nDamage = nDamage;
-	pMine->SetPos(pos);
-	pMine->SetSize(size);
-	pMine->m_pCollisionRectangle3D->SetSize(D3DXVECTOR3(size.x * 2.0f, size.y * 2.0f, 10.0f));
+	pForceField->Init();
+	pForceField->SetPos(pos);
+	pForceField->SetSize(size);
+	pForceField->m_pCollisionRectangle3D->SetSize(D3DXVECTOR3(size.x * 2.0f, size.y * 2.0f, 10.0f));
 
 	// インスタンスを返す
-	return pMine;
+	return pForceField;
 }
 
 //=============================================================================
 // コンストラクタ
-// Author : 髙野馨將
+// Author : 斉藤紫杏
 // 概要 : インスタンス生成時に行う処理
 //=============================================================================
-CMine::CMine()
+CForceField::CForceField()
 {
 	// タイプの付与
-	SetObjType(OBJETYPE_MINE);
+	SetObjType(OBJETYPE_FORCEFIELD);
 }
 
 //=============================================================================
 // デストラクタ
-// Author : 髙野馨將
+// Author : 斉藤紫杏
 // 概要 : インスタンス終了時に行う処理
 //=============================================================================
-CMine::~CMine()
+CForceField::~CForceField()
 {
 
 }
 
 //=============================================================================
 // 初期化
-// Author : 髙野馨將
+// Author : 斉藤紫杏
 // 概要 : 初期化
 //=============================================================================
-HRESULT CMine::Init()
+HRESULT CForceField::Init()
 {// 初期化処理
+
+	// メンバ変数の初期化
+	m_nDamage = 1;
+	m_AttackTime = 0;
+
 	CSkill::Init();
-	m_nDamage = 0;
-	LoadTex(3);
 
 	return S_OK;
 }
 
 //=============================================================================
 // 終了
-// Author : 髙野馨將
-// 概要 : 地雷の解放
+// Author : 斉藤紫杏
+// 概要 : フォースフィールドの解放
 //=============================================================================
-void CMine::Uninit()
+void CForceField::Uninit()
 {
 	// 終了処理
 	CSkill::Uninit();
 
-	// 地雷の解放
+	// フォースフィールドの解放
 	Release();
 }
 
 //=============================================================================
 // 更新
-// Author : 髙野馨將
-// 概要 : 地雷更新を行う
+// Author : 斉藤紫杏
+// 概要 : フォースフィールドを更新を行う
 //=============================================================================
-void CMine::Update()
+void CForceField::Update()
 {// 更新処理
-	// 当たり判定
-	if (m_pCollisionRectangle3D->Collision(CObject::OBJETYPE_ENEMY, false))
-	{
-		// 当たった相手の情報を持ってくるを
-		CEnemy *pEnemy = (CEnemy*)m_pCollisionRectangle3D->GetCollidedObj();
-		//ライフの減少
-		pEnemy->SetLife(pEnemy->GetLife() - m_nDamage);
-		// 終了処理
-		Uninit();
+	 //位置の取得
+	D3DXVECTOR3 PlayerPos = CGame::GetPlayer()->GetPos();
 
-		return;
+	m_AttackTime--;
+
+	if (m_AttackTime <= 0)
+	{
+		// 当たり判定
+		if (m_pCollisionRectangle3D->Collision(CObject::OBJETYPE_ENEMY, false))
+		{
+			// 当たった相手の情報を持ってくるを
+			CEnemy *pEnemy = (CEnemy*)m_pCollisionRectangle3D->GetCollidedObj();
+			//ライフの減少
+			pEnemy->SetLife(pEnemy->GetLife() - m_nDamage);
+			m_AttackTime = 50;
+		}
 	}
+	SetPos(PlayerPos);
 }
 
 //=============================================================================
 // 描画
-// Author : 髙野馨將
-// 概要 : 地雷描画を行う
+// Author : 斉藤紫杏
+// 概要 : フォースフィールドを描画を行う
 //=============================================================================
-void CMine::Draw()
+void CForceField::Draw()
 {// 描画処理
 	CSkill::Draw();
 }

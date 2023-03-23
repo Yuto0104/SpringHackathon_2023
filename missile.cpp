@@ -1,7 +1,7 @@
 //=============================================================================
 //
-// 地雷クラス(skill.h)
-// Author : 髙野馨將
+// ミサイルクラス(skill.h)
+// Author : 斉藤紫杏
 // 概要 : オブジェクト生成を行う
 //
 //=============================================================================
@@ -11,32 +11,32 @@
 //*****************************************************************************
 #include <assert.h>
 
-#include "mine.h"
+#include "missile.h"
 #include "collision_rectangle3D.h"
 #include "renderer.h"
 #include "game.h"
-#include "enemy.h"
 #include "player.h"
+#include "enemy.h"
 #include "application.h"
+#include "bullet.h"
 
 //=============================================================================
 // インスタンス生成
-// Author : 髙野馨將
-// 概要 : 地雷を生成する
+// Author : 斉藤紫杏
+// 概要 : ミサイルを生成する
 //=============================================================================
-CMine * CMine::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, int nDamage)
+CMissile * CMissile::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 {
 	// オブジェクトインスタンス
-	CMine *pMine = nullptr;
-	
+	CMissile *pMine = nullptr;
+
 	// メモリの解放
-	pMine = new CMine;
+	pMine = new CMissile;
 	// メモリの確保ができなかった
 	assert(pMine != nullptr);
 
 	// エネミーの初期化
 	pMine->Init();
-	pMine->m_nDamage = nDamage;
 	pMine->SetPos(pos);
 	pMine->SetSize(size);
 	pMine->m_pCollisionRectangle3D->SetSize(D3DXVECTOR3(size.x * 2.0f, size.y * 2.0f, 10.0f));
@@ -47,80 +47,99 @@ CMine * CMine::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, int nDamage)
 
 //=============================================================================
 // コンストラクタ
-// Author : 髙野馨將
+// Author : 斉藤紫杏
 // 概要 : インスタンス生成時に行う処理
 //=============================================================================
-CMine::CMine()
+CMissile::CMissile()
 {
-	// タイプの付与
-	SetObjType(OBJETYPE_MINE);
+
 }
 
 //=============================================================================
 // デストラクタ
-// Author : 髙野馨將
+// Author : 斉藤紫杏
 // 概要 : インスタンス終了時に行う処理
 //=============================================================================
-CMine::~CMine()
+CMissile::~CMissile()
 {
 
 }
 
 //=============================================================================
 // 初期化
-// Author : 髙野馨將
+// Author : 斉藤紫杏
 // 概要 : 初期化
 //=============================================================================
-HRESULT CMine::Init()
+HRESULT CMissile::Init()
 {// 初期化処理
+	m_BulletMove = D3DXVECTOR3(0.0f,0.0f,0.0f);
+
 	CSkill::Init();
-	m_nDamage = 0;
-	LoadTex(3);
 
 	return S_OK;
 }
 
 //=============================================================================
 // 終了
-// Author : 髙野馨將
-// 概要 : 地雷の解放
+// Author : 斉藤紫杏
+// 概要 : ミサイルの解放
 //=============================================================================
-void CMine::Uninit()
+void CMissile::Uninit()
 {
 	// 終了処理
 	CSkill::Uninit();
 
-	// 地雷の解放
+	// ミサイルの解放
 	Release();
 }
 
 //=============================================================================
 // 更新
-// Author : 髙野馨將
-// 概要 : 地雷更新を行う
+// Author : 斉藤紫杏
+// 概要 : ミサイル更新を行う
 //=============================================================================
-void CMine::Update()
+void CMissile::Update()
 {// 更新処理
-	// 当たり判定
-	if (m_pCollisionRectangle3D->Collision(CObject::OBJETYPE_ENEMY, false))
-	{
-		// 当たった相手の情報を持ってくるを
-		CEnemy *pEnemy = (CEnemy*)m_pCollisionRectangle3D->GetCollidedObj();
-		//ライフの減少
-		pEnemy->SetLife(pEnemy->GetLife() - m_nDamage);
-		// 終了処理
-		Uninit();
 
-		return;
+	D3DXVECTOR3 PlayerPos = CGame::GetPlayer()->GetPos();
+	if (CGame::GetEnemy() != nullptr)
+	{
+		D3DXVECTOR3 EnemyPos = CGame::GetEnemy()->GetPos();
+
+		m_BulletMove = PlayerPos - EnemyPos;
+		D3DXVec3Normalize(&m_BulletMove, &m_BulletMove);
+		m_BulletMove *= 15.0f;
+
+		m_nNormalTime--;
+		m_MissileTime--;
+
+		if (m_nNormalTime <= 0)
+		{
+			m_pBullet = CBullet::Create(PlayerPos, -m_BulletMove, D3DXVECTOR3(5.0f, 5.0f, 0.0f), 100, CBullet::BulletType_Normal);
+		}
+		if (m_nNormalTime <= 0)
+		{
+			m_nNormalTime = 40;
+		}
+
+		if (m_MissileTime <= 0)
+		{
+			m_pBullet = CBullet::Create(PlayerPos, -m_BulletMove, D3DXVECTOR3(25.0f, 25.0f, 0.0f), 100, CBullet::BulletType_Missile);
+		}
+		if (m_MissileTime <= 0)
+		{
+			m_MissileTime = 250;
+		}
 	}
+
 }
 
 //=============================================================================
 // 描画
-// Author : 髙野馨將
-// 概要 : 地雷描画を行う
+// Author : 斉藤紫杏
+// 概要 : ミサイル描画を行う
 //=============================================================================
-void CMine::Draw()
+void CMissile::Draw()
 {// 描画処理
 	CSkill::Draw();
 }

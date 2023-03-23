@@ -154,6 +154,7 @@
   <ItemGroup>
     <ClCompile Include="application.cpp" />
     <ClCompile Include="bg.cpp" />
+    <ClCompile Include="bullet.cpp" />
     <ClCompile Include="bullet3D.cpp" />
     <ClCompile Include="calculation.cpp" />
     <ClCompile Include="camera.cpp" />
@@ -163,6 +164,7 @@
     <ClCompile Include="debug_proc.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="fade.cpp" />
+    <ClCompile Include="forcefield.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="joypad.cpp" />
@@ -175,6 +177,7 @@
     <ClCompile Include="manager.cpp" />
     <ClCompile Include="mesh.cpp" />
     <ClCompile Include="mine.cpp" />
+    <ClCompile Include="missile.cpp" />
     <ClCompile Include="model3D.cpp" />
     <ClCompile Include="model_obj.cpp" />
     <ClCompile Include="motion.cpp" />
@@ -208,6 +211,7 @@
   <ItemGroup>
     <ClInclude Include="application.h" />
     <ClInclude Include="bg.h" />
+    <ClInclude Include="bullet.h" />
     <ClInclude Include="bullet3D.h" />
     <ClInclude Include="calculation.h" />
     <ClInclude Include="camera.h" />
@@ -217,6 +221,7 @@
     <ClInclude Include="debug_proc.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="fade.h" />
+    <ClInclude Include="forcefield.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="joypad.h" />
@@ -229,6 +234,7 @@
     <ClInclude Include="manager.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="mine.h" />
+    <ClInclude Include="missile.h" />
     <ClInclude Include="model3D.h" />
     <ClInclude Include="model_obj.h" />
     <ClInclude Include="motion.h" />

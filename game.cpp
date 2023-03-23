@@ -82,7 +82,7 @@ HRESULT CGame::Init()
 
 	// サウンド情報の取得
 	CSound *pSound = CApplication::GetSound();
-	pSound->PlaySound(CSound::SOUND_LABEL_BGM001);
+	//pSound->PlaySound(CSound::SOUND_LABEL_BGM000);
 
 	// 重力の値を設定
 	CCalculation::SetGravity(0.2f);
@@ -127,6 +127,11 @@ HRESULT CGame::Init()
 
 	// 地雷
 	CMine::Create(D3DXVECTOR3(100.0f, 50.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f),10);
+	CMine::Create(D3DXVECTOR3(200.0f, 50.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f),1);
+	CMine::Create(D3DXVECTOR3(300.0f, 50.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f),2);
+
+	// エネミー
+	m_pEnemy = CEnemy::Create(D3DXVECTOR3(100.0f,0.0f,0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f),2);
 
 	// マウスカーソルを消す
 	pMouse->SetShowCursor(false);
@@ -238,19 +243,6 @@ void CGame::Update()
 	{//一定以上ならスポーンさせて0にする
 		EnemySpawn();
 		m_nSpawnTime = 0;
-	}
-
-	if (m_pLille == nullptr
-		&& pKeyboard->GetTrigger(DIK_W))
-	{
-		m_pLille = CLille::Create();
-		m_pLille->SetLille(D3DXVECTOR3(640.0f, 360.0f, 0.0f), D3DXVECTOR3(300.0f, 400.0f, 0.0f));
-	}
-	else if (m_pLille != nullptr
-		&& pKeyboard->GetTrigger(DIK_W))
-	{
-		m_pLille->StopScroll();
-		m_pLille = nullptr;
 	}
 
 	// ライフ0以下だと

@@ -81,6 +81,7 @@ HRESULT CEnemy::Init()
 	m_pCollisionRectangle3D->SetParent(this);
 	m_pCollisionRectangle3D->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pCollisionRectangle3D->SetSize(D3DXVECTOR3(45.0f, 45.0f, 10.0f));
+	m_nLife = 50;
 
 	return S_OK;
 }
@@ -144,6 +145,7 @@ void CEnemy::Update()
 		pScore->AddScore(100);
 		// I—¹ˆ—
 		Uninit();
+		CGame::SetEnemy(nullptr);
 
 		return;
 	}

@@ -52,6 +52,9 @@
     <ClCompile Include="mine.cpp" />
     <ClCompile Include="skill.cpp" />
     <ClCompile Include="bullet3D.cpp" />
+    <ClCompile Include="bullet.cpp" />
+    <ClCompile Include="forcefield.cpp" />
+    <ClCompile Include="missile.cpp" />
     <ClCompile Include="life.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +109,9 @@
     <ClInclude Include="mine.h" />
     <ClInclude Include="skill.h" />
     <ClInclude Include="bullet3D.h" />
+    <ClInclude Include="bullet.h" />
+    <ClInclude Include="forcefield.h" />
+    <ClInclude Include="missile.h" />
     <ClInclude Include="life.h" />
   </ItemGroup>
 </Project>
