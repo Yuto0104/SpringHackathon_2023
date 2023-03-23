@@ -171,6 +171,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="manager.cpp" />
     <ClCompile Include="mesh.cpp" />
+    <ClCompile Include="mine.cpp" />
     <ClCompile Include="model3D.cpp" />
     <ClCompile Include="model_obj.cpp" />
     <ClCompile Include="motion.cpp" />
@@ -220,6 +221,7 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="manager.h" />
     <ClInclude Include="mesh.h" />
+    <ClInclude Include="mine.h" />
     <ClInclude Include="model3D.h" />
     <ClInclude Include="model_obj.h" />
     <ClInclude Include="motion.h" />
