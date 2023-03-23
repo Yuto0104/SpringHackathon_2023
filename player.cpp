@@ -1,7 +1,7 @@
 //=============================================================================
 //
 // player.cpp
-// Author : 梶田大夢
+// Author : 梶田大夢 髙野馨將
 //
 //=============================================================================
 
@@ -15,6 +15,7 @@
 #include "keyboard.h"
 #include "collision_rectangle3D.h"
 #include "debug_proc.h"
+#include "game.h"
 #include "enemy.h"
 
 //=============================================================================
@@ -48,6 +49,7 @@ HRESULT CPlayer::Init(void)
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			//速度の初期化処理
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			//向き
 	m_nMineCT = 0;									//クールタイム
+	m_nInvincibleCnt = 0;							//無敵時間
 
 	// 3D矩形の当たり判定の設定
 	m_pCollisionRectangle3D = CCollision_Rectangle3D::Create();
@@ -96,9 +98,20 @@ void CPlayer::Update(void)
 	m_move.y += (0.0f - m_move.y) * 0.1f;
 	m_move.z += (0.0f - m_move.z) * 0.1f;
 
-	//当たり判定
-	if (m_pCollisionRectangle3D->Collision(CObject::OBJETYPE_ENEMY, true))
+	//無敵時間
+	if (m_nInvincibleCnt > 0)
 	{
+		m_nInvincibleCnt--;			//無敵時間の減算
+	}
+
+	//当たり判定(無敵時間が0以下なら)
+	if (m_pCollisionRectangle3D->Collision(CObject::OBJETYPE_ENEMY, true) && m_nInvincibleCnt <= 0)
+	{
+		// 体力の減少
+		m_nLife--;
+		// 無敵時間の設定
+		m_nInvincibleCnt = 60;
+
 		CEnemy *pEnemy = (CEnemy*)m_pCollisionRectangle3D->GetCollidedObj();
 
 		D3DXVECTOR3 move = pEnemy->GetPos() - pEnemy->GetPosOld();
@@ -124,18 +137,23 @@ void CPlayer::Update(void)
 
 void CPlayer::Draw(void)
 {
-	CObject3D::Draw();
+	//点滅させる
+	if (m_nInvincibleCnt % 10 <= 5)
+	{
+		CObject3D::Draw();
+	}
 }
 
 //生成処理
-CPlayer* CPlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size)
+CPlayer* CPlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const int nLife)
 {
 	CPlayer* pPlayer = new CPlayer;		//インスタンスを生成する
 
 	pPlayer->Init();
 	pPlayer->SetPos(pos);
 	pPlayer->SetSize(size);
-	
+	pPlayer->m_nLife = nLife;
+
 	//生成したインスタンスを返す
 	return pPlayer;
 }

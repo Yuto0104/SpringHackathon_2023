@@ -1,7 +1,7 @@
 //=============================================================================
 //
 // player.h
-// Author : 梶田大夢
+// Author : 梶田大夢 髙野馨將
 //
 //=============================================================================
 #ifndef _PLAYER_H_
@@ -31,7 +31,9 @@ public:
 	void Update(void) override;											//更新処理
 	void Draw(void) override;											//描画処理
 
-	static CPlayer* Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size);	//生成処理
+	int GetLife(void) { return m_nLife; }								//ライフの取得
+
+	static CPlayer* Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, const int nLife);	//生成処理
 
 private:
 	void  PlayerController(void);										//プレイヤーの操作
@@ -44,6 +46,7 @@ private:
 	D3DXMATRIX  m_mtxWorld;												//ワールドマトリックス
 	int m_nMineCT;														//地雷のクールタイム
 	int m_nLife;														//体力
+	int m_nInvincibleCnt;												//無敵時間
 };
 
 #endif

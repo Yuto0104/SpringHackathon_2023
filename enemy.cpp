@@ -133,16 +133,15 @@ void CEnemy::Update()
 	SetPos(pos);
 
 	// 当たり判定
-	m_pCollisionRectangle3D->Collision(CObject::OBJETYPE_PLAYER, true);
+	//m_pCollisionRectangle3D->Collision(CObject::OBJETYPE_PLAYER, true);
 	m_pCollisionRectangle3D->Collision(CObject::OBJETYPE_ENEMY, true);
 
-	// ライフが0より小さくなったら
+	// ライフ0以下だと
 	if (m_nLife <= 0)
 	{
 		// スコアの加算
 		CScore *pScore = CGame::GetScore();
 		pScore->AddScore(100);
-		//pSound->PlaySound(CSound::SOUND_LABEL_SE_COIN000);
 		// 終了処理
 		Uninit();
 

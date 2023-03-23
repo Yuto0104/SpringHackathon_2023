@@ -52,6 +52,7 @@
     <ClCompile Include="mine.cpp" />
     <ClCompile Include="skill.cpp" />
     <ClCompile Include="bullet3D.cpp" />
+    <ClCompile Include="life.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.h" />
@@ -105,5 +106,6 @@
     <ClInclude Include="mine.h" />
     <ClInclude Include="skill.h" />
     <ClInclude Include="bullet3D.h" />
+    <ClInclude Include="life.h" />
   </ItemGroup>
 </Project>
